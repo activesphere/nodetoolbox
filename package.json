@@ -26,6 +26,6 @@
   "devDependencies": {
   },
   "scripts": {
-    "start": "nodemon server.coffee"
+    "start": "node server.js"
   }
 }

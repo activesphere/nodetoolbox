@@ -142,12 +142,6 @@ footer {
   width: 39px;
   overflow: hidden;
 }
-#follow_us #facebook a {
-  background: url("/images/social_icons.png") no-repeat -45px 0;
-}
-#follow_us #facebook a:hover {
-  background: url("/images/social_icons.png") no-repeat -45px -45px;
-}
 #follow_us #twitter a {
   background: url("/images/social_icons.png") no-repeat 0 0;
 }
