@@ -1,0 +1,43 @@
+!!! 5
+html
+  head
+    title The Node Toolbox - #{title}
+    meta(name="Description", content="The Node Toolbox is a catalogue of Node.js packages, tools and resources with popularity ratings based on Github watchers and forks")
+    meta(name="Keywords", content="#{title}, node.js, nodejs, node, toolbox, node-toolbox, npm, package, express, github, catalogue, overview, categories, packages, activesphere")
+    link(rel='shortcut icon', href='/favicon.ico')
+    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Lato', type='text/css')
+    link(rel='stylesheet', href='http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css')
+    link(rel='stylesheet', href='/styles/style.css', type='text/css', media='screen', charset='utf-8')
+  body
+    .topbar
+      .topbar-inner
+        .container-fluid
+          a.brand(href="/") node-toolbox
+          ul.nav
+            li
+              a(href='/categories') Categories
+            li  
+              a(href='/packages') Packages
+          form.pull-left(action="/search")
+            input(type="text", placeholder="Search", name="q")
+          != partial("./partials/_authentication_items")
+
+    .container-fluid
+      .sidebar
+        .well
+          != partial("./partials/_references_and_resources")
+          hr/
+          .twitter
+            a(href="https://twitter.com/share", class="twitter-share-button", data-text="Toolbox for #nodejs", data-count="horizontal", data-via="nodetoolbox", data-related="activesphere") Tweet
+            script(type="text/javascript", src="http://platform.twitter.com/widgets.js")    
+        != partial("./partials/twitter_stream")
+      .content
+        #main_content!= body
+    
+    != partial("./partials/_footer")
+    behaviour
+      script(src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.4.min.js')
+      script(src='http://twitter.github.com/bootstrap/1.3.0/bootstrap-twipsy.js')
+      script(src='/js/app.js')
+      script(src='/js/jquery.timeago.js')
+      != partial("./partials/_google_analytics")

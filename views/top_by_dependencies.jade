@@ -1,0 +1,6 @@
+h3 Popular by dependencies
+dl
+  each result in results
+    dt
+      a(href="/packages/#{result.key}") #{result.key}
+      sup= result.value

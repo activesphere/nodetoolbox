@@ -1,0 +1,13 @@
+#category-page.tile
+  - each packages_info, category_name in category_info
+    h3
+      != partial('./partials/_category_name', {category_name: category_name, packages_info: packages_info})
+    table.zebra-striped
+      each package in packages_info.docs
+        tr
+          td 
+            a(href="/packages/#{encodeURIComponent(package.id)}", rel="twipsy", class='package', title=" forks: #{package.forks};  watchers: #{package.watchers} ") 
+              = package.id
+            //- sup= package.forks + package.watchers
+          td
+            = package.description

@@ -1,0 +1,97 @@
+.tile
+  .header
+    - home_page = (package.versions && package.versions[latest_tag]) ? package.versions[latest_tag].homepage : (package.author ? package.author.url : "")
+    h2
+      if home_page
+        a(href=home_page) #{package.name || package["_id"]}
+      else
+        = package.name || package["_id"]
+    if latest_tag
+      span#latest-tag.label(title='latest')= latest_tag
+    #like
+      a.btn.small.info(href="#", data-package='#{package.name || package["_id"]}') Like
+      .twipsy.right.in
+        .twipsy-arrow
+        .twipsy-inner.like_count #{package.likes}
+    if package.github
+      whenUpdated = new Date(package.github.pushed_at).toISOString()
+        #when-updated
+          span.notice.label Last Updated : 
+          span.label.notice.timeago(title='#{whenUpdated}') #{whenUpdated}
+        
+  div
+    blockquote= package.description
+    .alert-message
+      h4
+        if latest && latest.preferGlobal
+          | INSTALL » npm install -g #{package['_id']}
+        else
+          | INSTALL » npm install #{package['_id']}
+    if package.repository && package.repository.url && package.repository.url && package.repository.type === 'git'
+      .alert-message
+        h4
+          | CODE » git clone #{package.repository.url}
+
+    .package-section
+      .span8
+        h5 Repository:
+          ul
+            if package.repository
+              li Type: #{package.repository.type}
+            if package.github
+              li URL:
+                a(href='#{package.github.url}') #{package.github.url}
+              li Forks: #{package.github.forks}
+              li Watchers: #{package.github.watchers}
+
+    hr
+    .package-section
+      .span8
+        h5 Categories:
+          if package.categories
+            dl 
+              each category in package.categories
+                dt
+                  a(href='/categories/' + encodeURIComponent(category)) #{category}
+    hr
+    if package.versions && package.versions[latest_tag]
+      - version = package.versions[latest_tag]
+      .package-section
+        if version.engines
+          .span8
+            h5 Engines:
+            dl
+              each engine_version, engine_name in version.engines
+                dt #{engine_name} #{engine_version}
+      hr
+      .package-section
+        .span5
+          h5 Author
+          ul.unstyled
+            li= ( version.author && version.author.name ) || "Unknown"
+        .span5
+          h5 Contributors
+          if version.contributors !== undefined
+            ul.unstyled
+              each contributor in version.contributors
+                li= contributor.name
+        .span4
+          h5 Maintainers
+          if version.maintainers
+            ul.unstyled
+              each maintainer in version.maintainers
+                li= maintainer["name"]
+      hr
+      .package-section
+        .span5
+          h5 Dependencies:
+          if version.dependencies
+            ul.unstyled
+              each dependency_version, dependency in version.dependencies
+                li #{dependency} #{dependency_version}
+        .span5
+          h5 Dev Dependencies:
+          if version.devDependencies
+            ul.unstyled
+              each dependency_version, dependency in version.devDependencies
+                li #{dependency} #{dependency_version}

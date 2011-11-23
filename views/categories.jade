@@ -1,0 +1,8 @@
+#categories-page.tile
+  h3 All Categories
+  ul
+    each packages_info, category_name in categories
+      li
+        a(href='/categories/'+ encodeURIComponent(category_name))
+          != partial('./partials/_category_name', {category_name: category_name, packages_info: packages_info})
+          
