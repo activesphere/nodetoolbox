@@ -17,7 +17,6 @@ metadata_db = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.
 
 extensions.createIfNotExisting packages_db
 
-
 packages_db.get '_design/recent', (err, doc) ->
   unless doc
     packages_db.save '_design/recent',
@@ -26,6 +25,13 @@ packages_db.get '_design/recent', (err, doc) ->
           emit(doc.time.created, 1) if doc.time and doc.time.created
           return
 
+packages_db.get '_design/package', (err, doc) ->
+  unless doc
+    packages_db.save '_design/package',
+      by_name:
+        map: (doc) -> emit(doc._id, author: doc.author, description: doc.description, name: doc._id)
+
+
 packages_db.get '_design/search', (err, doc) ->
   unless doc
     packages_db.save '_design/search',
@@ -33,6 +39,7 @@ packages_db.get '_design/search', (err, doc) ->
         map: (doc) ->
           descriptionBlacklist = [ "for", "and", "in", "are", "is", "it", "do", "of", "on", "the", "to", "as" ]
           name = doc.name or doc["_id"]
+          detailsFor = (doc) -> description: doc.description, author : doc.author
           if name
             if name
               names = [ name ]
@@ -118,6 +125,10 @@ packages_db.get '_design/repositories', (err, doc) ->
             emit(doc['_id'], {repo: url})
           return
 
+exports.fromSearch = (docs) ->
+  _.map docs, (doc) ->
+    id: doc.id, doc: {id: doc.id, description:doc.value?.description, author: doc.value?.author}
+
 exports.watch_updates = () ->
   redisPosition = "6020"
   redisClient.get 'current_npm_id', (err, value) ->
@@ -145,7 +156,7 @@ exports.updateChanged = (doc) ->
   catch error
     console.log error
   if doc.repository?.url
-    console.log doc.repository.url
+    console.log "Repo url -> #{doc.repository.url}"
     regex = /github.com\/(.*)\/(.*)\.git/
     match = doc.repository.url.match regex
     if match and match[1] and match[2]
@@ -216,26 +227,28 @@ exports.find = (name, callback) ->
     else
       packages_db.get name, (error, package) ->
         if not error and package
-          _.extend(package, doc)
+          _.extend package, doc
           redisClient.scard "#{name}:like", (err, reply) ->
-            _.extend package, likes: reply
+            _.extend package, likes: reply || 0
             callback.apply null, [null, package] 
         else
-          callback(error, null)
+          callback null, [error, null]
 
 exports.find_all = (key, callback) ->
   key ||= 'a'  
-  startkey = "\"#{key}aaaa\""
-  endkey = "\"#{key}zzzz\""
-  packages_db.all {startkey: startkey, endkey: endkey, include_docs: true}, (err, docs) ->
-    console.log err.reason if err
-    callback.apply null, [{key: key, docs: docs}]
+  packages_db.view 'package/by_name', startkey: "#{key}aaaa", endkey: "#{key}zzzz", include_docs: false, (err, docs) ->
+    callback.apply null, [ key: key, docs: exports.fromSearch(docs)]
 
 exports.search = (query, callback) ->
-  if query? and query.trim() isnt ''
+  if query?.trim() isnt ''
     query = query.trim()
-    packages_db.view "search/all", {key: query, include_docs: true}, (err, result) ->
-      callback.apply null, [{key: query, result: _.uniq(result, false, (item) -> item['id'])}]
+    packages_db.view "search/all", key: query, include_docs: false, (err, result) ->
+      docs = _.uniq result, false, (item) -> item['id']
+      PackageMetadata.rank exports.fromSearch(docs), (err, result) ->
+        callback.apply null, [ 
+          key: query
+          result: result
+      ]
 
 exports.top_by_dependencies = (top_n = 10, callback) ->
   packages_db.view 'ui/dependencies', {reduce: true, group: true}, (err, results) ->

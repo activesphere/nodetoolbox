@@ -2,6 +2,6 @@ h3 Recently added
 dl
   each result in results
     dt
-      #{result.id}
+      a(href="/packages/#{result.id}") #{result.id}
       - added_at = new Date(result.key).toISOString()
       sup.timeago(title=added_at)= added_at

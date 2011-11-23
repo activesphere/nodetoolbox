@@ -1,10 +1,11 @@
-cradle    = require 'cradle'
-util      = require 'util'
-_      = require 'underscore'
-extensions      = require '../lib/extensions'
-Conf      = require '../conf'
-GitHubApi   = require("github").GitHubApi
-github      = new GitHubApi(true)
+cradle        = require 'cradle'
+util          = require 'util'
+_             = require 'underscore'
+async         = require 'async'
+extensions    = require '../lib/extensions'
+Conf          = require '../conf'
+GitHubApi     = require("github").GitHubApi
+github        = new GitHubApi(true)
 
 PackageMetadata = exports = module.exports
 metadataDb = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.metadata_database)
@@ -35,7 +36,14 @@ metadataDb.get '_design/categories', (err, doc) ->
             emit -1, doc.description
           return 
 
-
+PackageMetadata.rank = (docs, callback) ->
+  async.sortBy(docs, (doc, call) ->
+    metadataDb.get doc.id, (err, doc) ->
+      if doc?.github
+        call err, -(doc.github.watchers + doc.github.forks)
+      else
+        call(null, 0)
+  , (err, results) -> callback(err, results))
 
 PackageMetadata.createOrUpdate = (opts, callback) ->
   if not callback 

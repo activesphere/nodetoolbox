@@ -110,7 +110,7 @@ app.listen port, () ->
 do packages.watch_updates
 
 if process.env.ENV_VARIABLE is 'production'
-  new cron.CronJob '0 0 0,4,8,12,16,20 * * *', () ->
+  new cron.CronJob '0 0 0 0,8,16 * * *', () ->
     console.log "Running Cron now"
     packages.import_from_github {}, (job_info) ->
       console.log job_info
