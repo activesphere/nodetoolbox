@@ -166,7 +166,7 @@
   });
   packages.watch_updates();
   if (process.env.ENV_VARIABLE === 'production') {
-    new cron.CronJob('0 0 0,4,8,12,16,20 * * *', function() {
+    new cron.CronJob('0 0 0 0,8,16 * * *', function() {
       console.log("Running Cron now");
       return packages.import_from_github({}, function(job_info) {
         return console.log(job_info);
