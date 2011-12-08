@@ -7,6 +7,8 @@ Conf.couchdb =
   host: process.env.npm_package_config__couchdb_host
   registry_database: process.env.npm_package_config__couchdb_registry_database
   metadata_database: process.env.npm_package_config__couchdb_metadata_database
+  username: process.env.npm_package_config__couchdb_username
+  password: process.env.npm_package_config__couchdb_password
   npm_registry: 
     host : "isaacs.iriscouch.com"
     port : 5984

@@ -171,8 +171,9 @@ exports.updateChanged = (doc) ->
           console.log "createOrUpdateError:response : #{response}"
 
 exports.import_from_npm = (o, callback) ->
-  npmDb = new cradle.Connection(conf.couchdb.npm_registry.host,conf.npm_registry.port).database(conf.npm_registry.database)
-  npmDb.replicate "http://#{conf.registry_database.host}:#{conf.registry_database.host}/#{conf.registry_database.database}", callback
+  couchConfig = conf.couchdb
+  npmDb = new cradle.Connection(couchConfig.npm_registry.host, couchConfig.npm_registry.port).database(couchConfig.npm_registry.database)
+  npmDb.replicate "http://#{couchConfig.username}:#{couchConfig.password}@#{couchConfig.host}/#{couchConfig.registry_database}", callback
   
 exports.import_from_github = (o, callback) ->
   packages_db.view 'repositories/git', _.extend(o, include_docs: true), (err, docs) ->
