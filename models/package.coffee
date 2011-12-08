@@ -171,7 +171,7 @@ exports.updateChanged = (doc) ->
           console.log "createOrUpdateError:response : #{response}"
 
 exports.import_from_npm = (o, callback) ->
-  npmDb = new cradle.Connection(conf.npm_registry.host,conf.npm_registry.port).database(conf.npm_registry.database)
+  npmDb = new cradle.Connection(conf.couchdb.npm_registry.host,conf.npm_registry.port).database(conf.npm_registry.database)
   npmDb.replicate "http://#{conf.registry_database.host}:#{conf.registry_database.host}/#{conf.registry_database.database}", callback
   
 exports.import_from_github = (o, callback) ->
@@ -181,7 +181,7 @@ exports.import_from_github = (o, callback) ->
     count = 0
     _.each docs, (view_doc) ->
       count = count + 1
-      _.delay(_.bind(updateGithubInfo, {}, view_doc), 1000 * count)
+      _.delay(_.bind(updateGithubInfo, {}, view_doc), 1500 * count)
     callback null, {to_import: docs.length}
 
 exports.save_categories = (name, category_name, callback) ->
