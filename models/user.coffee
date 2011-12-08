@@ -1,4 +1,4 @@
-cradle    = require 'cradle'
+cradle    = require 'sreeix-cradle'
 Conf      = require '../conf'
 extensions= require '../lib/extensions'
 users_db  = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database("users")

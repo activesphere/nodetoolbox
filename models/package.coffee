@@ -1,14 +1,16 @@
 http                = require 'http'
 coffeescript        = require 'coffee-script'
 fs                  = require 'fs'
-sys                 = require 'sys'
-cradle              = require 'cradle'
+util                 = require 'util'
+cradle              = require 'sreeix-cradle'
 _                   = require 'underscore'
 extensions          = require '../lib/extensions'
 Conf                = require '../conf'
 PackageMetadata     = require './package_metadata'
 CategoryMap         = require './category_map'
 redis               = require 'redis'
+winston             = require 'winston'
+
 redisClient         = redis.createClient Conf.redis.port, Conf.redis.host
 redisClient.auth Conf.redis.auth
 
@@ -137,32 +139,41 @@ exports.watch_updates = () ->
       redisClient.set 'current_npm_id', value, redis.print
     else
       redisPosition = value
-
+    console.log "setting redis current_npm_id to #{redisPosition}"    
     packages_db.changes(since: parseInt(redisPosition, 10) , feed: 'continuous').on 'response', (res) ->
       res.on 'data', (change) -> 
+        console.log "New change on #{util.inspect(change)}"
         packages_db.get change.id, (err, doc) ->
           redisClient.incr 'current_npm_id', redis.print
           if not err and doc?.keywords
+            console.log "updating changes for keywords #{doc.keywords}"
             exports.updateChanged doc
           else
-            console.log "Error in getting document for #{change._id} #{sys.inspect(err)}" if err
+            console.log "Error in getting document for #{change._id} #{util.inspect(err)}" if err
 
 exports.updateChanged = (doc) ->
   try
     keywords =  if _.isArray(doc.keywords) then doc.keywords else [doc.keywords]
     categories = _.map doc.keywords, (keyword) ->
       CategoryMap.from_keyword keyword
-    exports.save_categories doc.id, categories, (err, doc) -> console.log doc._id
+    exports.save_categories doc.id, categories, (err, doc) -> console.log "updateChanged:docid-> #{doc._id}"
   catch error
-    console.log error
+    console.log "updateChanged:Error #{error}"
   if doc.repository?.url
     console.log "Repo url -> #{doc.repository.url}"
     regex = /github.com\/(.*)\/(.*)\.git/
     match = doc.repository.url.match regex
     if match and match[1] and match[2]
       PackageMetadata.createOrUpdate id: doc.id, user: match[1], repo: match[2], (err, res) ->
-        console.log( err || res)
+        if err
+          console.log "createOrUpdateError:error : #{err}"
+        else
+          console.log "createOrUpdateError:response : #{response}"
 
+exports.import_from_npm = (o, callback) ->
+  npmDb = new cradle.Connection(conf.npm_registry.host,conf.npm_registry.port).database(conf.npm_registry.database)
+  npmDb.replicate "http://#{conf.registry_database.host}:#{conf.registry_database.host}/#{conf.registry_database.database}", callback
+  
 exports.import_from_github = (o, callback) ->
   packages_db.view 'repositories/git', _.extend(o, include_docs: true), (err, docs) ->
     updateGithubInfo = (view_doc) ->
@@ -170,8 +181,8 @@ exports.import_from_github = (o, callback) ->
     count = 0
     _.each docs, (view_doc) ->
       count = count + 1
-      _.delay(_.bind(updateGithubInfo, {}, view_doc), 2000 * count)
-    callback.apply null, [{to_import: docs.length}]
+      _.delay(_.bind(updateGithubInfo, {}, view_doc), 1000 * count)
+    callback null, {to_import: docs.length}
 
 exports.save_categories = (name, category_name, callback) ->
   unless name is ''
@@ -186,7 +197,10 @@ exports.save_categories = (name, category_name, callback) ->
         else
           metaDoc['categories'] = categories
         metadata_db.save name, metaDoc['_rev'], metaDoc, (err, res) -> 
-          console.log(err|| res)
+          if err
+            console.log "save_categories: error:#{name} #{err}"
+          else
+            console.log "Successfuly saved #{name} : #{res}"
 
 exports.by_rank = (number_of_items = 10, callback) ->
   metadata_db.view 'categories/rank', {limit: number_of_items, descending: true}, (err, docs) ->

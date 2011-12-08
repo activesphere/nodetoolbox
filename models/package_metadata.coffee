@@ -1,4 +1,4 @@
-cradle        = require 'cradle'
+cradle        = require 'sreeix-cradle'
 util          = require 'util'
 _             = require 'underscore'
 async         = require 'async'

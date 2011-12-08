@@ -166,10 +166,20 @@
   });
   packages.watch_updates();
   if (process.env.ENV_VARIABLE === 'production') {
-    new cron.CronJob('0 0 0,4,8,12,16,20 * * *', function() {
+    new cron.CronJob('0 0 4 * * * *', function() {
       console.log("Running Cron now");
-      return packages.import_from_github({}, function(job_info) {
+      return packages.import_from_github({}, function(err, job_info) {
         return console.log(job_info);
+      });
+    });
+    new cron.CronJob('0 0 5 * * * *', function() {
+      console.log("Running Cron now");
+      return packages.import_from_npm({}, function(err, info) {
+        if (err) {
+          return console.log(err);
+        } else {
+          return console.log(info);
+        }
       });
     });
   }
