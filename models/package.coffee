@@ -139,36 +139,36 @@ exports.watch_updates = () ->
       redisClient.set 'current_npm_id', value, redis.print
     else
       redisPosition = value
-    console.log "setting redis current_npm_id to #{redisPosition}"    
+    winston.log "setting redis current_npm_id to #{redisPosition}"    
     packages_db.changes(since: parseInt(redisPosition, 10) , feed: 'continuous').on 'response', (res) ->
       res.on 'data', (change) -> 
-        console.log "New change on #{util.inspect(change)}"
+        winston.log "New change on #{util.inspect(change)}"
         packages_db.get change.id, (err, doc) ->
           redisClient.incr 'current_npm_id', redis.print
           if not err and doc?.keywords
-            console.log "updating changes for keywords #{doc.keywords}"
+            winston.log "updating changes for keywords #{doc.keywords}"
             exports.updateChanged doc
           else
-            console.log "Error in getting document for #{change._id} #{util.inspect(err)}" if err
+            winston.log "Error in getting document for #{change._id} #{util.inspect(err)}" if err
 
 exports.updateChanged = (doc) ->
   try
     keywords =  if _.isArray(doc.keywords) then doc.keywords else [doc.keywords]
     categories = _.map doc.keywords, (keyword) ->
       CategoryMap.from_keyword keyword
-    exports.save_categories doc.id, categories, (err, doc) -> console.log "updateChanged:docid-> #{doc._id}"
+    exports.save_categories doc.id, categories, (err, doc) -> winston.log "updateChanged:docid-> #{doc._id}"
   catch error
-    console.log "updateChanged:Error #{error}"
+    winston.log "updateChanged:Error #{error}"
   if doc.repository?.url
-    console.log "Repo url -> #{doc.repository.url}"
+    winston.log "Repo url -> #{doc.repository.url}"
     regex = /github.com\/(.*)\/(.*)\.git/
     match = doc.repository.url.match regex
     if match and match[1] and match[2]
       PackageMetadata.createOrUpdate id: doc.id, user: match[1], repo: match[2], (err, res) ->
         if err
-          console.log "createOrUpdateError:error : #{err}"
+          winston.log "createOrUpdateError:error : #{err}"
         else
-          console.log "createOrUpdateError:response : #{response}"
+          winston.log "createOrUpdateError:response : #{response}"
 
 exports.import_from_npm = (o, callback) ->
   couchConfig = conf.couchdb
@@ -178,7 +178,7 @@ exports.import_from_npm = (o, callback) ->
 exports.import_from_github = (o, callback) ->
   packages_db.view 'repositories/git', _.extend(o, include_docs: true), (err, docs) ->
     updateGithubInfo = (view_doc) ->
-      PackageMetadata.createOrUpdate id: view_doc.doc['_id'], user: view_doc.value.user, repo: view_doc.value.repo, (err, res) -> console.log( err || res)
+      PackageMetadata.createOrUpdate id: view_doc.doc['_id'], user: view_doc.value.user, repo: view_doc.value.repo, (err, res) -> winston.log( err || res)
     count = 0
     _.each docs, (view_doc) ->
       count = count + 1
@@ -190,7 +190,7 @@ exports.save_categories = (name, category_name, callback) ->
     categories = _.flatten [category_name]
     metadata_db.get name, (err, metaDoc) ->
       if(err)
-        console.log "creating new doc for #{name}"
+        winston.log "creating new doc for #{name}"
         metadata_db.save name, categories: categories
       else
         if metaDoc['categories']?
@@ -199,9 +199,9 @@ exports.save_categories = (name, category_name, callback) ->
           metaDoc['categories'] = categories
         metadata_db.save name, metaDoc['_rev'], metaDoc, (err, res) -> 
           if err
-            console.log "save_categories: error:#{name} #{err}"
+            winston.log "save_categories: error:#{name} #{err}"
           else
-            console.log "Successfuly saved #{name} : #{res}"
+            winston.log "Successfuly saved #{name} : #{res}"
 
 exports.by_rank = (number_of_items = 10, callback) ->
   metadata_db.view 'categories/rank', {limit: number_of_items, descending: true}, (err, docs) ->
@@ -235,7 +235,7 @@ exports.by_category = (category_name, top_count = 10, callback) ->
     callback.apply null, [results]
 
 exports.find = (name, callback) ->
-  console.log " finding package #{name}"
+  winston.log " finding package #{name}"
   metadata_db.get name, (err, doc) ->
     if err or not doc
       callback err, null

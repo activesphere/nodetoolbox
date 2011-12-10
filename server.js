@@ -1,11 +1,13 @@
 (function() {
-  var Conf, RedisStore, app, coffee, cron, ensureAuthenticated, everyauth, express, helpers, packages, port, sys;
+  var Conf, RedisStore, app, coffee, cron, ensureAuthenticated, everyauth, express, helper, helpers, packages, port, util, winston;
   coffee = require('coffee-script');
   express = require('express');
   cron = require('cron');
-  sys = require('sys');
+  util = require('util');
+  winston = require('winston');
   Conf = require('./conf');
   everyauth = require('./auth').create(Conf);
+  helper = require('./lib/helper');
   packages = require('./models/package');
   RedisStore = require('connect-redis')(express);
   app = express.createServer();
@@ -162,28 +164,17 @@
   });
   port = process.env.PORT || 4000;
   app.listen(port, function() {
-    return console.log("app started at port " + port);
+    return winston.log("app started at port " + port);
   });
   packages.watch_updates();
   if (process.env.ENV_VARIABLE === 'production') {
     new cron.CronJob('0 0 4 * * * *', function() {
-      console.log("Running Cron now");
-      packages.import_from_github({}, function(err, info) {});
-      if (err) {
-        return console.log(err);
-      } else {
-        return console.log(info);
-      }
+      winston.log("Running github sync Cron now");
+      return packages.import_from_github({}, helper.print("github sync"));
     });
     new cron.CronJob('0 0 5 * * * *', function() {
-      console.log("Running Cron now");
-      return packages.import_from_npm({}, function(err, info) {
-        if (err) {
-          return console.log(err);
-        } else {
-          return console.log(info);
-        }
-      });
+      winston.log("Running Import job Cron now");
+      return packages.import_from_npm({}, helper.print("NPM Import"));
     });
   }
 }).call(this);

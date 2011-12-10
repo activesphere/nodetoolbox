@@ -28,6 +28,7 @@
   },
   "devDependencies": {
   }, "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "console": "node"
   }
 }

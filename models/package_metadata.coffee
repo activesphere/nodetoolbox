@@ -5,7 +5,8 @@ async         = require 'async'
 extensions    = require '../lib/extensions'
 Conf          = require '../conf'
 GitHubApi     = require("github").GitHubApi
-github        = new GitHubApi(true)
+github        = new GitHubApi true
+winston       = require 'winston'
 
 PackageMetadata = exports = module.exports
 metadataDb = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.metadata_database)
@@ -47,21 +48,21 @@ PackageMetadata.rank = (docs, callback) ->
 
 PackageMetadata.createOrUpdate = (opts, callback) ->
   if not callback 
-    callback = (err, res)-> console.log(err || res)
+    callback = (err, res)-> winston.log(err || res)
   github.getRepoApi().show opts.user, opts.repo, (err, github_info) ->
     if err or !github_info
-      console.log "error during fetch of the github info for #{opts.repo}, #{util.inspect(err)}"
+      winston.log "error during fetch of the github info for #{opts.repo}, #{util.inspect(err)}"
       callback.apply null, [err, null]
     else
-      console.log "Saving new document for #{opts.id}"
+      winston.log "Saving new document for #{opts.id}"
       metadataDb.get opts.id , (err, doc) ->
         if doc
           data = {}
           _.extend data, doc, github: github_info
           metadataDb.save opts.id, doc['_rev'], data, (err, res) ->
-            console.log "update doc #{res}"
+            winston.log "update doc #{res}"
             callback.apply null, [err, res]
         else
           metadataDb.save opts.id, github: github_info, (err, res) ->
-            console.log "new doc #{res}"
+            winston.log "new doc #{res}"
             callback.apply null, [err, res]

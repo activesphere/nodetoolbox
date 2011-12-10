@@ -1,9 +1,12 @@
 coffee    = require 'coffee-script'
 express   = require 'express'
 cron      = require 'cron'
-sys       = require 'sys'
+util       = require 'util'
+winston   = require 'winston'
+
 Conf      = require './conf'
 everyauth = require('./auth').create(Conf)
+helper = require './lib/helper'
 
 packages  = require './models/package'
 RedisStore = require('connect-redis')(express)
@@ -105,23 +108,15 @@ app.post '/packages/:name/like', (req, res, next) ->
 port = process.env.PORT || 4000
 
 app.listen port, () ->
-  console.log "app started at port #{port}"
+  winston.log "app started at port #{port}"
 
 do packages.watch_updates
 
 if process.env.ENV_VARIABLE is 'production'
   new cron.CronJob '0 0 4 * * * *', () ->
-    console.log "Running Cron now"
-    packages.import_from_github {}, (err, info) ->
-    if err
-      console.log err
-    else
-      console.log info
+    winston.log "Running github sync Cron now"
+    packages.import_from_github {}, helper.print("github sync")
       
   new cron.CronJob '0 0 5 * * * *', () ->
-    console.log "Running Cron now"
-    packages.import_from_npm {}, (err, info) ->
-      if err
-        console.log err
-      else
-        console.log info
+    winston.log "Running Import job Cron now"
+    packages.import_from_npm {}, helper.print( "NPM Import")
