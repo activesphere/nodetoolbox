@@ -26,6 +26,7 @@ Conf.redis =
   port: process.env.npm_package_config__redis_port
   auth: process.env.npm_package_config__redis_auth
 
+console.log "Redis : #{Conf.redis}"
 
 Conf.packageDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.registry_database)
 Conf.metadataDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.metadata_database)
