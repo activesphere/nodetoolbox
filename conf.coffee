@@ -1,4 +1,5 @@
 cradle = require 'sreeix-cradle'
+redis  = require 'redis'
 
 Conf = exports = module.exports
 
@@ -29,4 +30,5 @@ Conf.redis =
 Conf.packageDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.registry_database)
 Conf.metadataDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.metadata_database)
 Conf.userDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database("users")
-
+Conf.redisClient =  redis.createClient Conf.redis.port, Conf.redis.host
+Conf.redisClient.auth Conf.redis.auth

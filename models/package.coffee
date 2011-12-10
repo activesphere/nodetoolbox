@@ -1,20 +1,16 @@
-http                = require 'http'
 coffeescript        = require 'coffee-script'
 fs                  = require 'fs'
-util                 = require 'util'
+util                = require 'util'
+helper              = require '../lib/helper'
+
 _                   = require 'underscore'
 extensions          = require '../lib/extensions'
 Conf                = require '../conf'
 PackageMetadata     = require './package_metadata'
 CategoryMap         = require './category_map'
-redis               = require 'redis'
+
 winston             = require 'winston'
 
-redisClient         = redis.createClient Conf.redis.port, Conf.redis.host
-redisClient.auth Conf.redis.auth
-
-# packages_db = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.registry_database)
-# metadata_db = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.metadata_database)
 
 extensions.createIfNotExisting Conf.packageDatabase
 
@@ -132,10 +128,10 @@ exports.fromSearch = (docs) ->
 
 exports.watch_updates = () ->
   redisPosition = "6020"
-  redisClient.get 'current_npm_id', (err, value) ->
+  Conf.redisClient.get 'current_npm_id', (err, value) ->
     if err or parseInt(value, 10) < 6020
       value = "6020"
-      redisClient.set 'current_npm_id', value, redis.print
+      Conf.redisClient.set 'current_npm_id', value, helper.print
     else
       redisPosition = value
     winston.log "setting redis current_npm_id to #{redisPosition}"    
@@ -143,7 +139,7 @@ exports.watch_updates = () ->
       res.on 'data', (change) -> 
         winston.log "New change on #{util.inspect(change)}"
         Conf.packageDatabase.get change.id, (err, doc) ->
-          redisClient.incr 'current_npm_id', redis.print
+          Conf.redisClient.incr 'current_npm_id', helper.print
           if not err and doc?.keywords
             winston.log "updating changes for keywords #{doc.keywords}"
             exports.updateChanged doc
@@ -207,8 +203,8 @@ exports.by_rank = (number_of_items = 10, callback) ->
     callback.apply null, [docs]
 
 exports.like = (package, user, callback) ->
-  redisClient.sadd "#{package}:like", user, (err, val) ->
-    redisClient.scard "#{package}:like", (err, val) ->
+  Conf.redisClient.sadd "#{package}:like", user, (err, val) ->
+    Conf.redisClient.scard "#{package}:like", (err, val) ->
       callback err, val
   
 exports.by_category = (category_name, top_count = 10, callback) ->
@@ -242,7 +238,7 @@ exports.find = (name, callback) ->
       Conf.packageDatabase.get name, (error, package) ->
         if not error and package
           _.extend package, doc
-          redisClient.scard "#{name}:like", (err, reply) ->
+          Conf.redisClient.scard "#{name}:like", (err, reply) ->
             _.extend package, likes: reply || 0
             callback.apply null, [null, package] 
         else
