@@ -166,7 +166,6 @@
   app.listen(port, function() {
     return winston.log("app started at port " + port);
   });
-  packages.watch_updates();
   if (process.env.ENV_VARIABLE === 'production') {
     new cron.CronJob('0 0 4 * * * *', function() {
       winston.log("Running github sync Cron now");

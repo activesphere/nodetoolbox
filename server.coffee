@@ -110,7 +110,7 @@ port = process.env.PORT || 4000
 app.listen port, () ->
   winston.log "app started at port #{port}"
 
-do packages.watch_updates
+# do packages.watch_updates
 
 if process.env.ENV_VARIABLE is 'production'
   new cron.CronJob '0 0 4 * * * *', () ->
