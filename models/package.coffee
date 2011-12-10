@@ -2,7 +2,6 @@ http                = require 'http'
 coffeescript        = require 'coffee-script'
 fs                  = require 'fs'
 util                 = require 'util'
-cradle              = require 'sreeix-cradle'
 _                   = require 'underscore'
 extensions          = require '../lib/extensions'
 Conf                = require '../conf'
@@ -14,29 +13,29 @@ winston             = require 'winston'
 redisClient         = redis.createClient Conf.redis.port, Conf.redis.host
 redisClient.auth Conf.redis.auth
 
-packages_db = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.registry_database)
-metadata_db = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.metadata_database)
+# packages_db = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.registry_database)
+# metadata_db = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.metadata_database)
 
-extensions.createIfNotExisting packages_db
+extensions.createIfNotExisting Conf.packageDatabase
 
-packages_db.get '_design/recent', (err, doc) ->
+Conf.packageDatabase.get '_design/recent', (err, doc) ->
   unless doc
-    packages_db.save '_design/recent',
+    Conf.packageDatabase.save '_design/recent',
       created:
         map: (doc) ->
           emit(doc.time.created, 1) if doc.time and doc.time.created
           return
 
-packages_db.get '_design/package', (err, doc) ->
+Conf.packageDatabase.get '_design/package', (err, doc) ->
   unless doc
-    packages_db.save '_design/package',
+    Conf.packageDatabase.save '_design/package',
       by_name:
         map: (doc) -> emit(doc._id, author: doc.author, description: doc.description, name: doc._id)
 
 
-packages_db.get '_design/search', (err, doc) ->
+Conf.packageDatabase.get '_design/search', (err, doc) ->
   unless doc
-    packages_db.save '_design/search',
+    Conf.packageDatabase.save '_design/search',
       all:
         map: (doc) ->
           descriptionBlacklist = [ "for", "and", "in", "are", "is", "it", "do", "of", "on", "the", "to", "as" ]
@@ -103,9 +102,9 @@ packages_db.get '_design/search', (err, doc) ->
           return
 
 
-packages_db.get '_design/repositories', (err, doc) ->
+Conf.packageDatabase.get '_design/repositories', (err, doc) ->
   unless doc
-    packages_db.save '_design/repositories',
+    Conf.packageDatabase.save '_design/repositories',
       all:
         map: (doc) ->
           if doc.repository?
@@ -140,10 +139,10 @@ exports.watch_updates = () ->
     else
       redisPosition = value
     winston.log "setting redis current_npm_id to #{redisPosition}"    
-    packages_db.changes(since: parseInt(redisPosition, 10) , feed: 'continuous').on 'response', (res) ->
+    Conf.packageDatabase.changes(since: parseInt(redisPosition, 10) , feed: 'continuous').on 'response', (res) ->
       res.on 'data', (change) -> 
         winston.log "New change on #{util.inspect(change)}"
-        packages_db.get change.id, (err, doc) ->
+        Conf.packageDatabase.get change.id, (err, doc) ->
           redisClient.incr 'current_npm_id', redis.print
           if not err and doc?.keywords
             winston.log "updating changes for keywords #{doc.keywords}"
@@ -176,7 +175,7 @@ exports.import_from_npm = (o, callback) ->
   npmDb.replicate "http://#{couchConfig.username}:#{couchConfig.password}@#{couchConfig.host}/#{couchConfig.registry_database}", callback
   
 exports.import_from_github = (o, callback) ->
-  packages_db.view 'repositories/git', _.extend(o, include_docs: true), (err, docs) ->
+  Conf.packageDatabase.view 'repositories/git', _.extend(o, include_docs: true), (err, docs) ->
     updateGithubInfo = (view_doc) ->
       PackageMetadata.createOrUpdate id: view_doc.doc['_id'], user: view_doc.value.user, repo: view_doc.value.repo, (err, res) -> winston.log( err || res)
     count = 0
@@ -188,23 +187,23 @@ exports.import_from_github = (o, callback) ->
 exports.save_categories = (name, category_name, callback) ->
   unless name is ''
     categories = _.flatten [category_name]
-    metadata_db.get name, (err, metaDoc) ->
+    Conf.metadataDatabase.get name, (err, metaDoc) ->
       if(err)
         winston.log "creating new doc for #{name}"
-        metadata_db.save name, categories: categories
+        Conf.metadataDatabase.save name, categories: categories
       else
         if metaDoc['categories']?
           metaDoc['categories'] = _.union metaDoc['categories'], categories
         else
           metaDoc['categories'] = categories
-        metadata_db.save name, metaDoc['_rev'], metaDoc, (err, res) -> 
+        Conf.metadataDatabase.save name, metaDoc['_rev'], metaDoc, (err, res) -> 
           if err
             winston.log "save_categories: error:#{name} #{err}"
           else
             winston.log "Successfuly saved #{name} : #{res}"
 
 exports.by_rank = (number_of_items = 10, callback) ->
-  metadata_db.view 'categories/rank', {limit: number_of_items, descending: true}, (err, docs) ->
+  Conf.metadataDatabase.view 'categories/rank', {limit: number_of_items, descending: true}, (err, docs) ->
     callback.apply null, [docs]
 
 exports.like = (package, user, callback) ->
@@ -214,7 +213,7 @@ exports.like = (package, user, callback) ->
   
 exports.by_category = (category_name, top_count = 10, callback) ->
   criteria = if category_name? then {reduce:false, key: category_name} else {reduce:false}
-  metadata_db.view 'categories/all', criteria, (err, docs) ->
+  Conf.metadataDatabase.view 'categories/all', criteria, (err, docs) ->
     top_n = (packages) ->
       top = packages.sort (a, b) ->
         (b.forks + b.watchers) - (a.forks + a.watchers)
@@ -236,11 +235,11 @@ exports.by_category = (category_name, top_count = 10, callback) ->
 
 exports.find = (name, callback) ->
   winston.log " finding package #{name}"
-  metadata_db.get name, (err, doc) ->
+  Conf.metadataDatabase.get name, (err, doc) ->
     if err or not doc
       callback err, null
     else
-      packages_db.get name, (error, package) ->
+      Conf.packageDatabase.get name, (error, package) ->
         if not error and package
           _.extend package, doc
           redisClient.scard "#{name}:like", (err, reply) ->
@@ -251,13 +250,13 @@ exports.find = (name, callback) ->
 
 exports.find_all = (key, callback) ->
   key ||= 'a'  
-  packages_db.view 'package/by_name', startkey: "#{key}aaaa", endkey: "#{key}zzzz", include_docs: false, (err, docs) ->
+  Conf.packageDatabase.view 'package/by_name', startkey: "#{key}aaaa", endkey: "#{key}zzzz", include_docs: false, (err, docs) ->
     callback.apply null, [ key: key, docs: exports.fromSearch(docs)]
 
 exports.search = (query, callback) ->
   if query?.trim() isnt ''
     query = query.trim()
-    packages_db.view "search/all", key: query, include_docs: false, (err, result) ->
+    Conf.packageDatabase.view "search/all", key: query, include_docs: false, (err, result) ->
       docs = _.uniq result, false, (item) -> item['id']
       PackageMetadata.rank exports.fromSearch(docs), (err, result) ->
         callback.apply null, [ 
@@ -266,13 +265,13 @@ exports.search = (query, callback) ->
       ]
 
 exports.top_by_dependencies = (top_n = 10, callback) ->
-  packages_db.view 'ui/dependencies', {reduce: true, group: true}, (err, results) ->
+  Conf.packageDatabase.view 'ui/dependencies', {reduce: true, group: true}, (err, results) ->
     results = results?.sort (a, b)->
       b.value - a.value
     results = results?.slice(0, top_n) || []
     callback.apply null, [results]
 
 exports.recently_added = (number_of_recently_added = 10, callback) ->
-  packages_db.view 'recent/created', {descending: true, limit: number_of_recently_added}, (err, results) ->
+  Conf.packageDatabase.view 'recent/created', {descending: true, limit: number_of_recently_added}, (err, results) ->
     callback.apply null, [results]
 

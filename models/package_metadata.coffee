@@ -1,4 +1,3 @@
-cradle        = require 'sreeix-cradle'
 util          = require 'util'
 _             = require 'underscore'
 async         = require 'async'
@@ -9,12 +8,11 @@ github        = new GitHubApi true
 winston       = require 'winston'
 
 PackageMetadata = exports = module.exports
-metadataDb = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.metadata_database)
-extensions.createIfNotExisting metadataDb
+extensions.createIfNotExisting Conf.metadataDatabase
 
-metadataDb.get '_design/categories', (err, doc) ->
+Conf.metadataDatabase.get '_design/categories', (err, doc) ->
   unless doc
-    metadataDb.save '_design/categories',
+    Conf.metadataDatabase.save '_design/categories',
       all:
         map: (doc) ->
           if doc.github?
@@ -39,7 +37,7 @@ metadataDb.get '_design/categories', (err, doc) ->
 
 PackageMetadata.rank = (docs, callback) ->
   async.sortBy(docs, (doc, call) ->
-    metadataDb.get doc.id, (err, doc) ->
+    Conf.metadataDatabase.get doc.id, (err, doc) ->
       if doc?.github
         call err, -(doc.github.watchers + doc.github.forks)
       else
@@ -55,14 +53,14 @@ PackageMetadata.createOrUpdate = (opts, callback) ->
       callback.apply null, [err, null]
     else
       winston.log "Saving new document for #{opts.id}"
-      metadataDb.get opts.id , (err, doc) ->
+      Conf.metadataDatabase.get opts.id , (err, doc) ->
         if doc
           data = {}
           _.extend data, doc, github: github_info
-          metadataDb.save opts.id, doc['_rev'], data, (err, res) ->
+          Conf.metadataDatabase.save opts.id, doc['_rev'], data, (err, res) ->
             winston.log "update doc #{res}"
             callback.apply null, [err, res]
         else
-          metadataDb.save opts.id, github: github_info, (err, res) ->
+          Conf.metadataDatabase.save opts.id, github: github_info, (err, res) ->
             winston.log "new doc #{res}"
             callback.apply null, [err, res]

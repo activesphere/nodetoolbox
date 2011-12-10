@@ -1,13 +1,11 @@
-cradle    = require 'sreeix-cradle'
 Conf      = require '../conf'
 extensions= require '../lib/extensions'
-users_db  = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database("users")
 
-extensions.createIfNotExisting users_db
+extensions.createIfNotExisting Conf.userDatabase
 
-users_db.get '_design/docs', (err, res) ->
+Conf.userDatabase.get '_design/docs', (err, res) ->
   if err
-    users_db.save('_design/docs'
+    Conf.userDatabase.save('_design/docs'
       , views:
           by_github:
             map: "function(doc) { if (doc.githubId) emit(doc.githubId, doc); }"
@@ -16,7 +14,7 @@ users_db.get '_design/docs', (err, res) ->
     )
 
 exports.findOrCreate = (source, user_id, user_name, accessToken, accessTokenSecret, promise) ->
-  users_db.view "docs/by_#{source}", key: user_id, (err, docs) ->
+  Conf.userDatabase.view "docs/by_#{source}", key: user_id, (err, docs) ->
     if err
       console.log "Error using users/_design/docs/_view/by_#{source} #{err.reason}"
       promise.fail err
@@ -30,7 +28,7 @@ exports.findOrCreate = (source, user_id, user_name, accessToken, accessTokenSecr
         name: user_name
       doc["#{source}Id"] = user_id
 
-      users_db.save doc, (error, res) ->
+      Conf.userDatabase.save doc, (error, res) ->
         if error
           promise.fail error
           return

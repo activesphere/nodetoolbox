@@ -24,7 +24,12 @@
     "hiredis"         : "0.1.12",
     "github"          : "0.0.6",
     "async"           : "0.1.15",
-    "winston"         : "0.5.9"
+    "winston"         : "0.5.9",
+    "colors"          : "0.x.x",
+    "eyes"            : "0.1.x",
+    "loggly"          : "0.3.x >=0.3.7",
+    "pkginfo"         : "0.2.x",
+    "stack-trace"     : "0.0.x"
   },
   "devDependencies": {
   }, "scripts": {
