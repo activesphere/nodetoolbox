@@ -100,12 +100,45 @@ span.hello {
 .packages .pagination a {
   padding: 0 10px;
 }
-
 .packages table th {
   text-align: center;
 }
 .packages table td a {
   text-decoration: underline;
+}
+ul.package-stats {
+  display: inline-block;
+  margin: 0;
+  font-size: 80%;
+  line-height: 21px;
+  border: 1px solid #DDD;
+  -webkit-border-radius: 4px 4px;
+  -moz-border-radius: 4px / 4px;
+  -o-border-radius: 4px / 4px;
+  -ms-border-radius: 4px / 4px;
+  -khtml-border-radius: 4px / 4px;
+  border-radius: 4px / 4px;
+}
+ul.package-stats li {
+  list-style-type: none;
+  display: inline-block;
+}
+ul.package-stats li.likes {
+  color: #339BB9;
+  padding: 0 5px;
+}
+ul.package-stats li a {
+  margin-right: -3px;
+  padding: 0 5px 0 18px;
+  background-repeat: no-repeat;
+  background-position: 1px -5px;
+}
+ul.package-stats li.watchers a{
+  background-image: url('/images/github_watchers.png');
+}
+ul.package-stats li.forks a {
+  border-left: 1px solid #DDD;
+  background-image: url('/images/github_forks.png');
 }
 #top_ranked {
   overflow: hidden;
@@ -116,6 +149,14 @@ span.hello {
 #category-page li {
   font-size: 110%;
 }
+#categories-page .all-categories {
+  margin-left: -20px;
+}
+#categories-page .tile {
+  font-size: 110%;
+  height: 50px;
+}
+
 /*           FOOTER          */
 footer {
 	background-color: #EDEDED;

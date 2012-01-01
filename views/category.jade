@@ -6,8 +6,8 @@
       each package in packages_info.docs
         tr
           td 
-            a(href="/packages/#{encodeURIComponent(package.id)}", rel="twipsy", class='package', title=" forks: #{package.forks};  watchers: #{package.watchers} ") 
+            a(href="/packages/#{encodeURIComponent(package.id)}", class='package')
               = package.id
-            //- sup= package.forks + package.watchers
+            != partial('./partials/_package_stats', {package: package})
           td
             = package.description

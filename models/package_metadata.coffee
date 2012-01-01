@@ -17,6 +17,7 @@ Conf.metadataDatabase.get '_design/categories', (err, doc) ->
         map: (doc) ->
           if doc.github?
             obj = id: doc["_id"]
+              url: doc.github.url
               forks: doc.github.forks
               watchers: doc.github.watchers
               description: doc.description

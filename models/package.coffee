@@ -171,9 +171,9 @@ exports.import_from_npm = (o, callback) ->
   npmDb.replicate "http://#{couchConfig.username}:#{couchConfig.password}@#{couchConfig.host}/#{couchConfig.registry_database}", callback
   
 exports.import_from_github = (o, callback) ->
-  Conf.packageDatabase.view 'repositories/git', _.extend(o, include_docs: true), (err, docs) ->
+  Conf.packageDatabase.view 'repositories/git', _.extend(o, include_docs: false), (err, docs) ->
     updateGithubInfo = (view_doc) ->
-      PackageMetadata.createOrUpdate id: view_doc.doc['_id'], user: view_doc.value.user, repo: view_doc.value.repo, (err, res) -> winston.log( err || res)
+      PackageMetadata.createOrUpdate id: view_doc.id, user: view_doc.value.user, repo: view_doc.value.repo, (err, res) -> winston.log( err || res)
     count = 0
     _.each docs, (view_doc) ->
       count = count + 1
