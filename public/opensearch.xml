@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"> 
+  <ShortName>Node-Toolbox</ShortName> 
+  <Description>Search Node-Toolbox</Description> 
+  <InputEncoding>UTF-8</InputEncoding> 
+  <LongName>Node-Toolbox search engine</LongName> 
+  <Image height="16" width="16" type="image/png">data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAADHklEQVR42o2T709TZxTHnyWSuWS8MOkSt6ghk61SYaXl9kJbQunkR3UOikLFC0oDlKt0ZUJ7wUor2NJWbZG6ShEXhwgFrLr4e//E3tv9Db725Z7vzr02xsQX80k+OSfnfL/PPffe52GMVlVV1e6ampqvTSbTN5+CwWDYS7ZdrLx2UcFUW2vaNpstjyyWpseiaH1PUzmqdRWzYHlUZ6zfJI+BvJ8xvV5fSeaJH4zmf00mAQ0NjRAElSZYyggajdQTUU8ao9HM6+rMXtqggtFIXwmiNWcRbdxud6DF8SM6XMcxIXUi4m3D7HAbxqWjaO/8iXpHYG92QGy0cVG0LVRXV3/OWlpa9rc6O/5yONu561gXurpPwif/AkX2IOZ3IxboQdg/gBGfH13uXqgaVet0tj+wWq1fMLfbffDn7t5/jnf18n7Ji6lgGPNXUhga8WNwSNYY9QWQSGZwYXIGp0mjarvdfX+3tvZ9yfr7R0ynB4bfnvHK8AemoVycQziygKASxVQoQkQRUi5jNpqAMjNHGgWDZ8f4wJnRN5Ik7WFjYxfc8vkpPkWiuVga8WQWidRNJFM3kKSnqiSSS1igWjyxhPlYBpPBKM75g1yWAwYWCsdCoZl5fvX6MnLL95C/vVlmA/nVTayUya8WNHLL60hey2E6HOfB6Tk3i6eWViPz16i5gbWNP7FeeKJxf+vpB1CNolpf23iM3Mo6LsczPJbMXmTX07eeJ69m+Y2bq7hzt4A/1h9g7X6ReEjih++iRlHrqZrF7G2aIovMYv53Fggoz7zeczxF77i9/Qw7Oy+xtfWc8hfYUdl5QflLLS8WX6FQeIoYfYch+jszypU7rKdHKjY3t0GWJ5Gn0VKpW5i9lEY0kiEW3xOJpJFOr+C33F0yj0P1DEq+ReZsdW0ePmzmHR3d/Px4kJ8d8nOPx8dPER7PmMYpNfaN8uHhCe6Tf6VDdIyOssCPdp5IsNraemXfvm9fHzpUX7JYnCWbrbNkt7s+wmZzaT1BcJS+1xtLBw5891pssEvqbazQ6XSVOp2+Ur1Yer39f9BrWtXDWEPFf2vK3htSqsTWAAAAAElFTkSuQmCC</Image> 
+  <Url type="text/html" method="get" template="http://toolbox.no.de/search?q={searchTerms}"/>  
+</OpenSearchDescription>
