@@ -112,11 +112,11 @@ app.listen port, () ->
 
 do packages.watch_updates
 
-# if process.env.ENV_VARIABLE is 'production'
-#   new cron.CronJob '0 0 4 * * * *', () ->
-#     winston.log "Running github sync Cron now"
-#     packages.import_from_github {}, helper.print("github sync")
-#       
-#   new cron.CronJob '0 0 5 * * * *', () ->
-#     winston.log "Running Import job Cron now"
-#     packages.import_from_npm {}, helper.print( "NPM Import")
+if process.env.ENV_VARIABLE is 'production'
+  new cron.CronJob '0 0 4 * * * *', () ->
+    winston.log "Running github sync Cron now"
+    packages.import_from_github {}, helper.print("github sync")
+      
+  new cron.CronJob '0 0 5 * * * *', () ->
+    winston.log "Running Import job Cron now"
+    packages.import_from_npm {}, helper.print( "NPM Import")

@@ -166,9 +166,8 @@ exports.updateChanged = (doc) ->
           winston.log "createOrUpdateError:response : #{response}"
 
 exports.import_from_npm = (o, callback) ->
-  couchConfig = conf.couchdb
-  npmDb = new cradle.Connection(couchConfig.npm_registry.host, couchConfig.npm_registry.port).database(couchConfig.npm_registry.database)
-  npmDb.replicate "http://#{couchConfig.username}:#{couchConfig.password}@#{couchConfig.host}/#{couchConfig.registry_database}", callback
+  couchConfig = Conf.couchdb
+  Conf.npmDb.replicate "http://#{couchConfig.username}:#{couchConfig.password}@#{couchConfig.host}/#{couchConfig.registry_database}", callback
   
 exports.import_from_github = (o, callback) ->
   Conf.packageDatabase.view 'repositories/git', _.extend(o, include_docs: false), (err, docs) ->
