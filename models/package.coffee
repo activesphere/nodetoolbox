@@ -146,10 +146,11 @@ exports.watch_updates = () ->
           else
             winston.log "Error in getting document for #{change._id} #{util.inspect(err)}" if err
 
-exports.updateChanged = (doc) ->
+exports.updateChanged = (doc, keywords=undefined) ->
   try
-    keywords =  if _.isArray(doc.keywords) then doc.keywords else [doc.keywords]
-    categories = _.map doc.keywords, (keyword) ->
+    keywords = keywords || doc.keywords
+    keywords =  if _.isArray(keywords) then keywords else [keywords]
+    categories = _.map keywords, (keyword) ->
       CategoryMap.from_keyword keyword
     exports.save_categories doc.id, categories, (err, doc) -> winston.log "updateChanged:docid-> #{doc._id}"
   catch error
@@ -163,7 +164,7 @@ exports.updateChanged = (doc) ->
         if err
           winston.log "createOrUpdateError:error : #{err}"
         else
-          winston.log "createOrUpdateError:response : #{response}"
+          winston.log "createOrUpdateError:response : #{res}"
 
 exports.import_from_npm = (o, callback) ->
   couchConfig = Conf.couchdb
@@ -179,6 +180,19 @@ exports.import_from_github = (o, callback) ->
       _.delay(_.bind(updateGithubInfo, {}, view_doc), 1500 * count)
     callback null, {to_import: docs.length}
 
+exports.capitaliseFirstLetter = (string) ->
+  string.charAt(0).toUpperCase() + string.slice(1)
+
+exports.capitaliseCategories = (categories) ->
+  corrected_items = _.map categories, (item) ->
+    if item.match(/jquery/i)
+      'jQuery'
+    else if item.match(/JavaScript/i)
+      'Javascript'
+    else
+      exports.capitaliseFirstLetter(item) 
+  _.uniq(corrected_items)
+
 exports.save_categories = (name, category_name, callback) ->
   unless name is ''
     categories = _.flatten [category_name]
@@ -191,11 +205,12 @@ exports.save_categories = (name, category_name, callback) ->
           metaDoc['categories'] = _.union metaDoc['categories'], categories
         else
           metaDoc['categories'] = categories
+        metaDoc['categories'] = exports.capitaliseCategories(metaDoc['categories'])
         Conf.metadataDatabase.save name, metaDoc['_rev'], metaDoc, (err, res) -> 
           if err
             winston.log "save_categories: error:#{name} #{err}"
           else
-            winston.log "Successfuly saved #{name} : #{res}"
+            winston.log "Successfuly saved #{name} : #{util.inspect(metaDoc['categories'])}"
 
 exports.by_rank = (number_of_items = 10, callback) ->
   Conf.metadataDatabase.view 'categories/rank', {limit: number_of_items, descending: true}, (err, docs) ->

@@ -36,6 +36,7 @@
     "start": "node server.js",
     "console": "node",
     "github-sync-setup": "coffee script/sync_github.coffee setup",
-    "github-sync": "coffee script/sync_github.coffee"
+    "github-sync": "coffee script/sync_github.coffee",
+    "auto-categorize": "coffee script/auto_categorize.coffee"
   }
 }
