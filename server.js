@@ -164,16 +164,16 @@
   });
   port = process.env.PORT || 4000;
   app.listen(port, function() {
-    return winston.log("app started at port " + port);
+    return winston.info("app started at port " + port);
   });
   packages.watch_updates();
   if (process.env.ENV_VARIABLE === 'production') {
     new cron.CronJob('0 0 4 * * * *', function() {
-      winston.log("Running github sync Cron now");
+      winston.info("Running github sync Cron now");
       return packages.import_from_github({}, helper.print("github sync"));
     });
-    new cron.CronJob('0 0 5 * * * *', function() {
-      winston.log("Running Import job Cron now");
+    new cron.CronJob('0 0 5,7 * * * *', function() {
+      winston.info("Running Import job Cron now");
       return packages.import_from_npm({}, helper.print("NPM Import"));
     });
   }
