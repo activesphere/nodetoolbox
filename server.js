@@ -172,7 +172,7 @@
       winston.info("Running github sync Cron now");
       return packages.import_from_github({}, helper.print("github sync"));
     });
-    new cron.CronJob('0 0 5,7 * * * *', function() {
+    new cron.CronJob('0 0 5,8 * * * *', function() {
       winston.info("Running Import job Cron now");
       return packages.import_from_npm({}, helper.print("NPM Import"));
     });

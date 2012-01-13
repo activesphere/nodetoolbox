@@ -117,6 +117,6 @@ if process.env.ENV_VARIABLE is 'production'
     winston.info "Running github sync Cron now"
     packages.import_from_github {}, helper.print("github sync")
       
-  new cron.CronJob '0 0 5,7 * * * *', () ->
+  new cron.CronJob '0 0 5,8 * * * *', () ->
     winston.info "Running Import job Cron now"
     packages.import_from_npm {}, helper.print( "NPM Import")
