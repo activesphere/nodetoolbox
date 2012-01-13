@@ -10,13 +10,13 @@ Conf.userDatabase.get '_design/docs', (err, res) ->
           by_github:
             map: "function(doc) { if (doc.githubId) emit(doc.githubId, doc); }"
       , (err, res) ->
-        console.log "error in creating views for user #{err.reason}" if err
+        winston.error "error in creating views for user #{err.reason}" if err
     )
 
 exports.findOrCreate = (source, user_id, user_name, accessToken, accessTokenSecret, promise) ->
   Conf.userDatabase.view "docs/by_#{source}", key: user_id, (err, docs) ->
     if err
-      console.log "Error using users/_design/docs/_view/by_#{source} #{err.reason}"
+      winston.error "Error using users/_design/docs/_view/by_#{source} #{err.reason}"
       promise.fail err
       return
     if docs.length > 0

@@ -1,10 +1,12 @@
+winston       = require 'winston'
+
 exports.createIfNotExisting = (db) ->
   db.exists (err, exists) ->
     if err
-      console.log "createIfNotExisting:error", err
+      winston.error "createIfNotExisting:error", err
     else if exists
-      console.log "createIfNotExisting:database - #{db.name} already exists!"
+      winston.debug "createIfNotExisting:database - #{db.name} already exists!"
     else
-      console.log "createIfNotExisting:database - #{db.name} does not exist. Creating."
+      winston.debug "createIfNotExisting:database - #{db.name} does not exist. Creating."
       do db.create
 

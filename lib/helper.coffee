@@ -1,6 +1,8 @@
+winston       = require 'winston'
+
 exports.print = (module = "") ->
   (err, info) ->
     if err
-      console.log "Error: #{module} : #{err}"
+      winston.error "Error: #{module} : #{err}"
     else
-      console.log "Complete: #{module} : #{info}"
+      winston.info "Complete: #{module} : #{info}"

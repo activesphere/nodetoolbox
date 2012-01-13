@@ -1,6 +1,6 @@
 cradle = require 'sreeix-cradle'
 redis  = require 'redis'
-
+# winston= require 'winston'
 Conf = exports = module.exports
 
 process.env.NODE_ENV ||= "development"
@@ -36,3 +36,10 @@ Conf.npmDb = new cradle.Connection(Conf.couchdb.npm_registry.host, Conf.couchdb.
 
 Conf.redisClient =  redis.createClient Conf.redis.port, Conf.redis.host
 Conf.redisClient.auth Conf.redis.auth
+
+# Conf.logger = new (winston.Logger)({
+#   transports: [
+#     new (winston.transports.Console)(),
+#     new (winston.transports.File)({ filename: '.log' })
+#   ]
+# });

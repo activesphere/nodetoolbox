@@ -134,17 +134,17 @@ exports.watch_updates = () ->
       Conf.redisClient.set 'current_npm_id', value, helper.print
     else
       redisPosition = value
-    winston.log "setting redis current_npm_id to #{redisPosition}"    
+    winston.info "setting redis current_npm_id to #{redisPosition}"    
     Conf.packageDatabase.changes(since: parseInt(redisPosition, 10) , feed: 'continuous').on 'response', (res) ->
       res.on 'data', (change) -> 
-        winston.log "New change on #{util.inspect(change)}"
+        winston.info "New change on #{util.inspect(change)}"
         Conf.packageDatabase.get change.id, (err, doc) ->
           Conf.redisClient.incr 'current_npm_id', helper.print
           if not err and doc?.keywords
-            winston.log "updating changes for keywords #{doc.keywords}"
+            winston.info "updating changes for keywords #{doc.keywords}"
             exports.updateChanged doc
           else
-            winston.log "Error in getting document for #{change._id} #{util.inspect(err)}" if err
+            winston.error "Error in getting document for #{change._id} #{util.inspect(err)}" if err
 
 exports.updateChanged = (doc, keywords=undefined) ->
   try
@@ -152,19 +152,19 @@ exports.updateChanged = (doc, keywords=undefined) ->
     keywords =  if _.isArray(keywords) then keywords else [keywords]
     categories = _.map keywords, (keyword) ->
       CategoryMap.from_keyword keyword
-    exports.save_categories doc.id, categories, (err, doc) -> winston.log "updateChanged:docid-> #{doc._id}"
+    exports.save_categories doc.id, categories, (err, doc) -> winston.info "updateChanged:docid-> #{doc._id}"
   catch error
-    winston.log "updateChanged:Error #{error}"
+    winston.error "updateChanged:Error #{error}"
   if doc.repository?.url
-    winston.log "Repo url -> #{doc.repository.url}"
+    winston.info "Repo url -> #{doc.repository.url}"
     regex = /github.com\/(.*)\/(.*)\.git/
     match = doc.repository.url.match regex
     if match and match[1] and match[2]
       PackageMetadata.createOrUpdate id: doc.id, user: match[1], repo: match[2], (err, res) ->
         if err
-          winston.log "createOrUpdateError:error : #{err}"
+          winston.error "createOrUpdateError:error : #{err}"
         else
-          winston.log "createOrUpdateError:response : #{res}"
+          winston.info "createOrUpdateError:response : #{res}"
 
 exports.import_from_npm = (o, callback) ->
   couchConfig = Conf.couchdb
@@ -198,7 +198,7 @@ exports.save_categories = (name, category_name, callback) ->
     categories = _.flatten [category_name]
     Conf.metadataDatabase.get name, (err, metaDoc) ->
       if(err)
-        winston.log "creating new doc for #{name}"
+        winston.info "creating new doc for #{name}"
         Conf.metadataDatabase.save name, categories: categories
       else
         if metaDoc['categories']?
@@ -208,9 +208,9 @@ exports.save_categories = (name, category_name, callback) ->
         metaDoc['categories'] = exports.capitaliseCategories(metaDoc['categories'])
         Conf.metadataDatabase.save name, metaDoc['_rev'], metaDoc, (err, res) -> 
           if err
-            winston.log "save_categories: error:#{name} #{err}"
+            winston.error "save_categories: error:#{name} #{err}"
           else
-            winston.log "Successfuly saved #{name} : #{util.inspect(metaDoc['categories'])}"
+            winston.info "Successfuly saved #{name} : #{util.inspect(metaDoc['categories'])}"
 
 exports.by_rank = (number_of_items = 10, callback) ->
   Conf.metadataDatabase.view 'categories/rank', {limit: number_of_items, descending: true}, (err, docs) ->
@@ -244,7 +244,7 @@ exports.by_category = (category_name, top_count = 10, callback) ->
     callback.apply null, [results]
 
 exports.find = (name, callback) ->
-  winston.log " finding package #{name}"
+  winston.info " finding package #{name}"
   Conf.metadataDatabase.get name, (err, doc) ->
     if err or not doc
       callback err, null

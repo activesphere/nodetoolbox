@@ -50,18 +50,18 @@ PackageMetadata.createOrUpdate = (opts, callback) ->
     callback = (err, res)-> winston.log(err || res)
   github.getRepoApi().show opts.user, opts.repo, (err, github_info) ->
     if err or !github_info
-      winston.log "error during fetch of the github info for #{opts.repo}, #{util.inspect(err)}"
+      winston.error "error during fetch of the github info for #{opts.repo}, #{util.inspect(err)}"
       callback.apply null, [err, null]
     else
-      winston.log "Saving new document for #{opts.id}"
+      winston.info "Saving new document for #{opts.id}"
       Conf.metadataDatabase.get opts.id , (err, doc) ->
         if doc
           data = {}
           _.extend data, doc, github: github_info
           Conf.metadataDatabase.save opts.id, doc['_rev'], data, (err, res) ->
-            winston.log "update doc #{res}"
+            winston.info "update doc #{res}"
             callback.apply null, [err, res]
         else
           Conf.metadataDatabase.save opts.id, github: github_info, (err, res) ->
-            winston.log "new doc #{res}"
+            winston.info "new doc #{res}"
             callback.apply null, [err, res]
