@@ -168,11 +168,11 @@
   });
   packages.watch_updates();
   if (process.env.ENV_VARIABLE === 'production') {
-    new cron.CronJob('0 0 4 * * * *', function() {
+    new cron.CronJob('0 0 6,18 * * * *', function() {
       winston.info("Running github sync Cron now");
       return packages.import_from_github({}, helper.print("github sync"));
     });
-    new cron.CronJob('0 0 5,8 * * * *', function() {
+    new cron.CronJob('0 0 5,17 * * * *', function() {
       winston.info("Running Import job Cron now");
       return packages.import_from_npm({}, helper.print("NPM Import"));
     });

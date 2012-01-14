@@ -177,7 +177,7 @@ exports.import_from_github = (o, callback) ->
     count = 0
     _.each docs, (view_doc) ->
       count = count + 1
-      _.delay(_.bind(updateGithubInfo, {}, view_doc), 1500 * count)
+      _.delay(_.bind(updateGithubInfo, {}, view_doc), 2000 * count)
     callback null, {to_import: docs.length}
 
 exports.capitaliseFirstLetter = (string) ->
