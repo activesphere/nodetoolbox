@@ -1,5 +1,6 @@
 Conf      = require '../conf'
 extensions= require '../lib/extensions'
+winston = require 'winston'
 
 extensions.createIfNotExisting Conf.userDatabase
 
