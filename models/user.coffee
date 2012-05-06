@@ -4,16 +4,16 @@ winston = require 'winston'
 
 extensions.createIfNotExisting Conf.userDatabase
 
-Conf.userDatabase.get '_design/docs', (err, res) ->
-  if err
-    Conf.userDatabase.save('_design/docs'
-      , views:
-          by_github:
-            map: "function(doc) { if (doc.githubId) emit(doc.githubId, doc); }"
-      , (err, res) ->
-        winston.error "error in creating views for user #{err.reason}" if err
-    )
-
+# Conf.userDatabase.get '_design/docs', (err, res) ->
+#   if err
+#     Conf.userDatabase.save('_design/docs'
+#       , views:
+#           by_github:
+#             map: "function(doc) { if (doc.githubId) emit(doc.githubId, doc); }"
+#       , (err, res) ->
+#         winston.error "error in creating views for user #{err.reason}" if err
+#     )
+# 
 exports.findOrCreate = (source, user_id, user_name, accessToken, accessTokenSecret, promise) ->
   Conf.userDatabase.view "docs/by_#{source}", key: user_id, (err, docs) ->
     if err
