@@ -1,0 +1,13 @@
+#category-page.tile
+  - each packages_info, category_name in category_info
+    h3
+      != partial('./partials/_category_name', {category_name: category_name, packages_info: packages_info})
+    table.zebra-striped
+      each package in packages_info.docs
+        tr
+          td 
+            a(href="/packages/#{encodeURIComponent(package.id)}", class='package')
+              = package.id
+            != partial('./partials/_package_stats', {package: package})
+          td
+            = package.description

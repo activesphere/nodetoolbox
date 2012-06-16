@@ -1,0 +1,25 @@
+!!! 5
+html
+  head
+    style(type="text/css")
+      body {width: 600px; margin: 0 auto}
+      .heading {font-size: 1.1em; margin: 40px auto; width: 320px}
+      .credit {font-size: 0.8em; margin: 40px auto; width: 230px}
+      .notice {font-size: 1.2em}
+  body
+    p.heading
+      | Sorry, we failed to bring
+      strong= params.name
+      |  back.
+    .notice 
+      p This may have been caused by one of the following -
+      ul
+        li Missing github url in the package description.
+        li We are yet to synchronize the metadata.
+    
+    img(src='/images/failwhale.jpg')
+
+    p.credit
+      |Thanks to
+      a(href="http://www.davemottcreative.com/#776645/Fail-Whale-Poster") Dave Mott
+      |  for the failwhale

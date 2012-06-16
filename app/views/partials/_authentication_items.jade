@@ -1,0 +1,7 @@
+if everyauth.loggedIn
+  p(class='pull-right')
+    span(class='hello') Hello, #{everyauth.github ? everyauth.github.user.login : "guest"}
+    a(href='/logout') Logout
+else
+  p(class='pull-right')
+    a(href="/auth/github", class="btn github") Login with github

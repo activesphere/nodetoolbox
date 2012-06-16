@@ -1,0 +1,6 @@
+ul.package-stats
+  //- li.likes(title="Likes")= package.likes || 0
+  li.watchers
+    a(href="#{package.url}/watchers", class="tooltipped downwards", title="Watchers") #{package.watchers}
+  li.forks
+    a(href="#{package.url}/network", class="tooltipped downwards", title="Forks") #{package.forks}

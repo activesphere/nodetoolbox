@@ -1,0 +1,26 @@
+{
+  "author": "Nilakanta <nilakanta@gmail.com>",
+  "name": "node-toolbox",
+  "description": "A Toolbox for node.js",
+  "version": "0.0.2",
+  "repository": {"type": "git", "url" : "git@github.com:activesphere/nodetoolboxv2.git"},
+  "main": "server.js",
+  "engines": { "node": ">= 0.4.12" },
+  "node-version": ">0.4.12",
+  "dependencies": {
+    "socket.io"       : "0.9.6",
+    "jade"            : "0.26.1",
+    "express"         : "2.5.1",
+    "connect-redis"   : "1.1.0",
+    "underscore"      : "1.2.1",  
+    "coffee-script"   : "1.1.1",
+    "everyauth"       : "0.2.20",
+    "hiredis"         : "0.1.12",
+    "redis"           : "0.7.2"
+  },
+  "devDependencies": {
+  }, "scripts": {
+    "start": "node server.js",
+    "console": "node"
+  }
+}

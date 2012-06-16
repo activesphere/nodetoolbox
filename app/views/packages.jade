@@ -1,0 +1,17 @@
+.packages
+  - letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+  - letter_index = letters.indexOf(key)
+  - prev = letter_index < 1 ? '' : letters[letter_index - 1]
+  - next = letter_index > 24 ? '' : letters[letter_index + 1]
+  .pagination
+    ul
+      li(class="prev #{prev === '' ? 'disabled' : ''}")
+        a(href="/packages?key=#{prev}")&larr; Previous
+      each letter in letters
+        li(class="#{letter === key ? 'active' : ''}")
+          a(href="/packages?key=#{letter}") #{letter}
+      li(class="prev #{next === '' ? 'disabled' : ''}")
+        a(href="/packages?key=#{next}") Next &rarr;
+
+  != partial("./partials/_packages", {packages: packages})
+                    

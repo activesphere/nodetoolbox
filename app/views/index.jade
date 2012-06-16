@@ -1,0 +1,22 @@
+#top_ranked.well
+    #popular_packages.span5
+      h3 Popular by github
+      dl
+        each package in top_ranked_packages
+          dt
+            a(href='/packages/#{encodeURIComponent(package.id)}') #{package.id}
+    #top_dependent_packages.span5
+    #recently_added.span5
+
+#categories.row
+  each packages_info, category_name in categories
+    .tile.span5.category
+      h4
+        a(href='/categories/#{encodeURIComponent(category_name)}') 
+          != partial('./partials/_category_name', {category_name: category_name, packages_info: packages_info})
+      p
+        each package in packages_info.docs
+          console.log(package)
+          a(href='/packages/'+ package.id, rel="twipsy", class='package', title=" forks: #{package.forks};  watchers: #{package.watchers} ") #{package.id}
+      p.more
+        a(href='/categories/#{encodeURIComponent(category_name)}', class='btn') More »

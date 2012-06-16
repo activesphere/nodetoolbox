@@ -1,0 +1,30 @@
+script(src="http://widgets.twimg.com/j/2/widget.js")
+script
+  new TWTR.Widget({
+    version: 2,
+    type: 'profile',
+    rpp: 4,
+    interval: 30000,
+    width: 220,
+    height: 300,
+    theme: {
+      shell: {
+        background: 'rgb(108, 108, 108)',
+        color: '#E6E6E6'
+      },
+      tweets: {
+        background: 'rgb(128, 128, 128)',
+        color: '#E6E6E6',
+        links: '#FFFFFF'
+      }
+    },
+    features: {
+      scrollbar: false,
+      loop: false,
+      live: false,
+      hashtags: true,
+      timestamp: true,
+      avatars: false,
+      behavior: 'all'
+    }
+  }).render().setUser('nodetoolbox').start();

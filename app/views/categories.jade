@@ -1,0 +1,9 @@
+#categories-page
+  h3 All Categories
+  div.all-categories
+    each packages_info, category_name in categories
+      div.tile.span3
+        a(href='/categories/'+ encodeURIComponent(category_name))
+          = toProperCase(category_name)
+        br
+        #{packages_info.count} packages
