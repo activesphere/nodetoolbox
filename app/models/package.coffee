@@ -30,6 +30,15 @@ Package.by_rank = (number_of_items = 10, cb) ->
       cb err
     cb null, docs
 
+Package.all = (filter = '', cb) ->
+  filter ||= 'a'  
+  Conf.packageDatabase.view 'package/by_name', startkey: "#{filter}aaaa", endkey: "#{filter}zzzz", include_docs: false, (err, docs) ->
+    if err
+      return cb(err)
+    documents = _.map docs, (doc) ->  id: doc.id, doc: {id: doc.id, description: doc.value?.description, author: doc.value?.author}  
+    cb null,  key: filter, docs: documents
+
+
 Package.find = (name, cb) ->
   Conf.metadataDatabase.get name, (err, doc) ->
     if err

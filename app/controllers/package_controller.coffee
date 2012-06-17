@@ -16,4 +16,10 @@ module.exports = PackageController =
       latest_tag =  pkg["dist-tags"]?.latest ? ""
       latest = pkg.versions?[latest_tag]
       res.render 'package', package: pkg, title: req.params.name, latest_tag: latest_tag, latest: latest 
+
+  index: (req, res) ->
+    Package.all req.query.key, (err, packages_info) ->
+      if err
+        return next(err)
+      res.render 'packages', key: packages_info.key, packages: packages_info.docs, title: 'All Packages'
     
