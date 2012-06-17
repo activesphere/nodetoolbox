@@ -1,5 +1,5 @@
 auth    = require 'everyauth'
-User    = require './models/user'
+User    = require '../app/models/user'
 
 exports.create = (Conf) ->
   auth

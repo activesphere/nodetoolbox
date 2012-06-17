@@ -4,7 +4,7 @@
   "description": "A Toolbox for node.js",
   "version": "0.0.2",
   "repository": {"type": "git", "url" : "git@github.com:activesphere/nodetoolboxv2.git"},
-  "main": "server.js",
+  "main": "app/app.js",
   "engines": { "node": ">= 0.4.12" },
   "node-version": ">0.4.12",
   "dependencies": {
@@ -15,12 +15,13 @@
     "underscore"      : "1.2.1",  
     "coffee-script"   : "1.1.1",
     "everyauth"       : "0.2.20",
+    "cradle"          : "0.6.3",
     "hiredis"         : "0.1.12",
     "redis"           : "0.7.2"
   },
   "devDependencies": {
   }, "scripts": {
-    "start": "node server.js",
+    "start": "node app/app.js",
     "console": "node"
   }
 }

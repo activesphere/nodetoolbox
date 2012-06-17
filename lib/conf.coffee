@@ -1,6 +1,5 @@
-cradle = require 'sreeix-cradle'
+cradle = require 'cradle'
 redis  = require 'redis'
-# winston= require 'winston'
 Conf = exports = module.exports
 
 process.env.NODE_ENV ||= "development"
