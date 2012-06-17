@@ -68,8 +68,9 @@ create_cdb_view '_design/search',
     kwds = kwds.concat tags_keywords
 
     # description
+    desc = doc.description
     desc_blacklist = "for and in are is it do of on the to as".split(' ')
-    replacement_lst = ".,\n,\r,`,_,\",',(,),[,],{,},*,%,+".split(',')
+    replacement_lst = ". \n \r ` _ \" ' ( ) [ ] { } * % +".split(' ')
     replacement_lst = new RegExp(i, 'g') for i in replacement_lst
     desc_keywords = []
     if typeof(desc) == 'string'
