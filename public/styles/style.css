@@ -1,0 +1,243 @@
+body {
+  padding-top: 60px;
+  background: none repeat scroll 0 0 rgb(247, 247, 247);
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+}
+body .container-fluid .content {
+  min-height: 580px;
+}
+.well {
+  background: rgb(237, 237, 237);
+}
+hr {
+  border-bottom-color: rgb(220, 220, 220);
+}
+a:link {
+  color: #707070;
+  text-decoration: none;
+}
+a:visited {
+  color: #707070;
+  text-decoration: none;
+}
+a:active {
+  background: none repeat scroll 0 0 #C4BBAB;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+a img {
+  border: 0 none;
+  margin: 0;
+  padding: 0;
+}
+a:hover {
+  text-decoration: underline;
+}
+.topbar .nav a {
+  color: #A29D91;
+}
+.topbar .brand {
+  margin-left: 0;
+  background: url('/images/toolbox_icon.png') no-repeat;
+  padding: 8px 80px 12px 40px;
+}
+a.brand:hover {
+  text-decoration: underline;
+}
+sup {
+  margin-left: 3px;
+  color: #F89406;
+}
+sup.label.warning {
+  padding: 1px 3px;
+}
+a.package {
+  padding: 3px 8px 3px 0;
+  text-decoration: underline;
+/*  min-height: 200px;*/
+}
+a.package:hover {
+  background: none repeat scroll 0 0 #FFFA92;
+}
+#categories {
+  overflow: hidden;
+}
+#categories h4 a {
+  color: #404040;
+}
+.tile {
+  padding: 10px;
+  margin-bottom: 10px;
+  background: none repeat scroll 0 0 #FFFFFF;
+  border: 1px solid #D8D8D8;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
+  position: relative;
+  white-space:pre;white-space:pre-wrap;word-wrap:break-word;
+}
+.category.tile {
+  min-height: 155px;  
+}
+#categories .more {
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+}
+span.hello {
+  padding-right: 5px;
+  color: #A29D91;
+}
+.pull-right a.btn {
+  margin-left: 20px;
+}
+.pull-right a.btn:hover {
+  background-position: 0 -30px;
+}
+.packages .pagination {
+  margin: 0 auto 20px;
+  width: 868px;
+}
+.packages .pagination a {
+  padding: 0 10px;
+}
+.packages table th {
+  text-align: center;
+}
+.packages table td a {
+  text-decoration: underline;
+}
+ul.package-stats {
+  display: inline-block;
+  margin: 0;
+  font-size: 80%;
+  line-height: 21px;
+  border: 1px solid #DDD;
+  -webkit-border-radius: 4px 4px;
+  -moz-border-radius: 4px / 4px;
+  -o-border-radius: 4px / 4px;
+  -ms-border-radius: 4px / 4px;
+  -khtml-border-radius: 4px / 4px;
+  border-radius: 4px / 4px;
+}
+ul.package-stats li {
+  list-style-type: none;
+  display: inline-block;
+}
+ul.package-stats li.likes {
+  color: #339BB9;
+  padding: 0 5px;
+}
+ul.package-stats li a {
+  margin-right: -3px;
+  padding: 0 5px 0 18px;
+  background-repeat: no-repeat;
+  background-position: 1px -5px;
+}
+ul.package-stats li.watchers a{
+  background-image: url('/images/github_watchers.png');
+}
+ul.package-stats li.forks a {
+  border-left: 1px solid #DDD;
+  background-image: url('/images/github_forks.png');
+}
+#top_ranked {
+  overflow: hidden;
+}
+#top_ranked dt {
+  font-size: 120%;
+}
+#category-page li {
+  font-size: 110%;
+}
+#categories-page .all-categories {
+  margin-left: -20px;
+}
+#categories-page .tile {
+  font-size: 110%;
+  height: 50px;
+}
+
+/*           FOOTER          */
+footer {
+	background-color: #EDEDED;
+	border: 1px solid rgba(0, 0, 0, 0.05);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+	padding-bottom: 17px;
+}
+#follow_us ul {
+  float: left;
+  width: 186px;
+}
+#follow_us li {
+  float: left;
+  height: 39px;
+  margin: 0 10px 10px 0;
+  width: 39px;
+}
+#follow_us li.last {
+  margin-right: 0;
+}
+#follow_us li a {
+  display: block;
+  height: 39px;
+  width: 39px;
+  overflow: hidden;
+}
+#follow_us #twitter a {
+  background: url("/images/social_icons.png") no-repeat 0 0;
+}
+#follow_us #twitter a:hover {
+  background: url("/images/social_icons.png") no-repeat 0 -45px;
+}
+#follow_us #rss a {
+  background: url("/images/social_icons.png") no-repeat -89px 0;
+}
+#follow_us #rss a:hover {
+  background: url("/images/social_icons.png") no-repeat -89px -45px;
+}
+#follow_us span {
+  height: 100%;
+  width: 100%;
+}
+.tile .header {
+  margin-bottom: 20px;
+}
+.tile .header h2 {
+  display: inline;
+}
+.header #latest-tag {
+  margin-left: 4px;
+  margin-right: 10px;
+}
+.package-section {
+  overflow: hidden;
+}
+#when-updated {
+  margin-right: 10px;
+}
+#when-updated span.label:first-child {
+  border-radius: 3px 0 0 3px;
+}
+#when-updated span.label.timeago {
+  border-radius: 0px 3px 3px 0px;  
+}
+#like {
+  display: inline;
+}
+#like a {
+  padding: 2px 19px;
+}
+#like .twipsy {
+  display: inline;
+  margin-top: 7px;
+}
+#like .twipsy-arrow {
+  border-right-color:  #339BB9;
+}
+#like .twipsy-inner {
+  color: #339BB9;
+  background-color: transparent;
+  border: 1px solid #339BB9;
+  padding: 0px 19px;
+  font-weight: bold;
+}

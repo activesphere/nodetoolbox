@@ -43,7 +43,7 @@ app.configure ->
   app.use app.router
   app.set 'view engine', 'jade'
   app.set 'views', __dirname + '/views'
-  app.use express.static __dirname + '/public'
+  app.use express.static __dirname + '/../public'
   app.use express.favicon('favicon.ico')
   app.helpers helpers
   everyauth.helpExpress(app)
