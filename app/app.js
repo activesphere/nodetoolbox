@@ -95,6 +95,10 @@
 
   app.get('/', package_controller.home);
 
+  app.get('/packages/:name', package_controller.show);
+
+  app.get('/categories', category_controller.index);
+
   app.get('/top_dependent_packages', function(req, res) {
     return packages.top_by_dependencies(10, function(results) {
       return res.render('top_by_dependencies', {

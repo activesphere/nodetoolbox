@@ -30,4 +30,16 @@ Package.by_rank = (number_of_items = 10, cb) ->
       cb err
     cb null, docs
 
+Package.find = (name, cb) ->
+  Conf.metadataDatabase.get name, (err, doc) ->
+    if err
+      return callback err
+    Conf.packageDatabase.get name, (error, pkg) ->
+      if error
+        return cb error
+      _.extend package, doc
+      Conf.redisClient.scard "#{name}:like", (err, reply) ->
+        _.extend package, likes: reply || 0
+        callback null, package
+
 module.exports = Package
