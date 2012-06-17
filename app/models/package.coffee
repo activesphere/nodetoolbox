@@ -37,9 +37,9 @@ Package.find = (name, cb) ->
     Conf.packageDatabase.get name, (error, pkg) ->
       if error
         return cb error
-      _.extend package, doc
+      _.extend pkg, doc
       Conf.redisClient.scard "#{name}:like", (err, reply) ->
-        _.extend package, likes: reply || 0
-        callback null, package
+        _.extend pkg, likes: reply || 0
+        cb null, pkg
 
 module.exports = Package

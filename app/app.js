@@ -95,6 +95,8 @@
 
   app.get('/', package_controller.home);
 
+  app.get('/packages', package_controller.index);
+
   app.get('/packages/:name', package_controller.show);
 
   app.get('/categories', category_controller.index);
