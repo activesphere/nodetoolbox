@@ -1,11 +1,11 @@
-util          = require 'util'
-_             = require 'underscore'
-async         = require 'async'
-extensions    = require '../lib/extensions'
-Conf          = require '../conf'
-GitHubApi     = require("github").GitHubApi
-github        = new GitHubApi true
-winston       = require 'winston'
+util       = require 'util'
+_          = require 'underscore'
+async      = require 'async'
+extensions = require '../lib/extensions'
+Conf       = require '../conf'
+github     = require('gitter')
+
+winston    = require 'winston'
 
 PackageMetadata = exports = module.exports
 extensions.createIfNotExisting Conf.metadataDatabase
@@ -34,7 +34,7 @@ Conf.metadataDatabase.get '_design/categories', (err, doc) ->
             emit rank, doc.description
           else
             emit -1, doc.description
-          return 
+          return
 
 PackageMetadata.rank = (docs, callback) ->
   async.sortBy(docs, (doc, call) ->
@@ -46,9 +46,9 @@ PackageMetadata.rank = (docs, callback) ->
   , (err, results) -> callback(err, results))
 
 PackageMetadata.createOrUpdate = (opts, callback) ->
-  if not callback 
+  if not callback
     callback = (err, res)-> winston.log(err || res)
-  github.getRepoApi().show opts.user, opts.repo, (err, github_info) ->
+  github.repo opts.user, opts.repo, (err, github_info) ->
     if err or !github_info
       winston.error "error during fetch of the github info for #{opts.repo}, #{util.inspect(err)}"
       callback.apply null, [err, null]
