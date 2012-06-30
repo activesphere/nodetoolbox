@@ -1,4 +1,4 @@
-logger       = require 'winston'
+logger = require 'winston'
 
 exports.print = (module = "") ->
   (err, info) ->

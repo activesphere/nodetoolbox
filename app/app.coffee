@@ -1,12 +1,12 @@
 coffee    = require 'coffee-script'
 express   = require 'express'
 cron      = require 'cron'
-util       = require 'util'
-winston   = require 'winston'
+util      = require 'util'
+logger    = require 'winston'
 
 Conf      = require '../lib/conf'
 everyauth = require('../lib/auth').create(Conf)
-helper = require '../lib/helper'
+helper    = require '../lib/helper'
 
 package_controller = require './controllers/package_controller'
 category_controller = require './controllers/category_controller'
@@ -62,33 +62,26 @@ app.get '/', package_controller.home
 app.get '/packages', package_controller.index
 app.get '/packages/:name', package_controller.show
 app.get '/categories', category_controller.index
-# app.get '/categories/:name', category_controller.show
+app.get '/categories/:name', category_controller.show
 # app.get '/search', package_controller.search
 # app.post '/packages/:name/like', package_controller.like
 
 
-app.get '/top_dependent_packages', (req, res) ->
-  packages.top_by_dependencies 10, (results) ->
-    res.render 'top_by_dependencies', layout: false, results: results, title: "Top packages by dependency"
-
-app.get '/recently_added', (req, res) ->
-  packages.recently_added 10, (results) ->
-    res.render 'recently_added', layout: false, results: results, title: "Recently added packages"
-
-
+app.get '/top_dependent_packages', package_controller.top_by_dependencies
+app.get '/recently_added', package_controller.recently_added
 
 port = process.env.PORT || 4000
 
 app.listen port, () ->
-  winston.info "app started at port #{port}"
+  logger.info "app started at port #{port}"
 
 do packages.watch_updates
 
 if process.env.ENV_VARIABLE is 'production'
   new cron.CronJob '0 0 6,18 * * * *', () ->
-    winston.info "Running github sync Cron now"
+    logger.info "Running github sync Cron now"
     packages.import_from_github {}, helper.print("github sync")
       
   new cron.CronJob '0 0 5,17 * * * *', () ->
-    winston.info "Running Import job Cron now"
+    logger.info "Running Import job Cron now"
     packages.import_from_npm {}, helper.print("NPM Import")
