@@ -4,8 +4,8 @@ logger = require 'winston'
 
 extensions.createIfNotExisting Conf.userDatabase
 
-exports.findOrCreate = (source, user_id, user_name, accessToken, accessTokenSecret, promise) ->
-  Conf.userDatabase.view "docs/by_#{source}", key: user_id, (err, docs) ->
+exports.findOrCreate = (source, userId, userName, accessToken, accessTokenSecret, promise) ->
+  Conf.userDatabase.view "docs/by_#{source}", key: userId, (err, docs) ->
     if err
       logger.error "Error using users/_design/docs/_view/by_#{source} #{err.reason}"
       return promise.fail(err)
@@ -14,15 +14,16 @@ exports.findOrCreate = (source, user_id, user_name, accessToken, accessTokenSecr
       user = docs[0].value
       promise.fulfill user
     else
-      create (err, doc)->
-        if error
-          return promise.fail(error)
+      create source, userId, userName, accessToken, (err, doc)->
+        if err
+          logger.error(err)
+          return promise.fail(err)
         promise.fulfill doc
 
-create = (cb) ->
+create = (source, userId, userName, accessToken,  cb) ->
   doc =
     accessToken: accessToken
-    name: user_name
-  doc["#{source}Id"] = user_id
+    name: userName
+  doc["#{source}Id"] = userName
   Conf.userDatabase.save doc, cb
   

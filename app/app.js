@@ -63,12 +63,13 @@
       }),
       secret: "eat your dog food"
     }));
-    app.use(app.router);
     app.set('view engine', 'jade');
     app.set('views', __dirname + '/views');
     app.use(express["static"](__dirname + '/../public'));
     app.use(express.favicon('favicon.ico'));
     app.helpers(helpers);
+    app.use(app.router);
+    app.use(everyauth.middleware());
     return everyauth.helpExpress(app);
   });
 

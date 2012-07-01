@@ -33,6 +33,7 @@ ensureAuthenticated = (req, res, next) ->
 app.configure ->
   app.use express.bodyParser()
   app.use express.cookieParser()
+
   app.use express.session 
     store: new RedisStore
       maxAge: 24 * 60 * 60 * 1000
@@ -40,12 +41,16 @@ app.configure ->
       host: Conf.redis.host
       pass: Conf.redis.auth
     secret: "eat your dog food"
-  app.use app.router
+
   app.set 'view engine', 'jade'
   app.set 'views', __dirname + '/views'
   app.use express.static __dirname + '/../public'
   app.use express.favicon('favicon.ico')
   app.helpers helpers
+  app.use app.router
+
+  app.use everyauth.middleware()
+
   everyauth.helpExpress(app)
 
 app.configure 'development', () ->
