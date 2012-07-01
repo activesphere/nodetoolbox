@@ -64,7 +64,7 @@ app.get '/packages/:name', package_controller.show
 app.get '/categories', category_controller.index
 app.get '/categories/:name', category_controller.show
 app.get '/search', package_controller.search
-# app.post '/packages/:name/like', package_controller.like
+app.post '/packages/:name/like', package_controller.like
 
 
 app.get '/top_dependent_packages', package_controller.top_by_dependencies

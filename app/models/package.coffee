@@ -67,6 +67,13 @@ Package.find = (name, cb) ->
         _.extend pkg, likes: reply || 0
         cb null, pkg
 
+Package.like = (package, user, callback) ->
+  Conf.redisClient.sadd "#{package}:like", user, (err, val) ->
+    if err
+      return callback err
+    Conf.redisClient.scard "#{package}:like", (err, val) ->
+      callback err, val
+
 Package.search = (query, callback) ->
   if query?.trim() isnt ''
     query = query.trim()

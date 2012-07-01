@@ -36,6 +36,16 @@ module.exports = PackageController =
         return next(err)
       res.render 'recently_added', layout: false, results: results, title: "Recently added packages"
 
+  like : (req, res, next) ->
+    if req.session.auth
+      Package.like req.params.name, req.session.auth.github.user.login, (err, count) ->
+        if(err)
+          logger.error err
+          return res.send "Something bad happened", 422
+        res.send  count: count
+    else
+      res.send "Please log in to Like", 403
+
 # This should have mapped to index, but legacy wise it's needed
   search: (req, res, next) ->
     Package.search req.query.q, (err, matches) ->
