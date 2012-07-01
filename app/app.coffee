@@ -63,7 +63,7 @@ app.get '/packages', package_controller.index
 app.get '/packages/:name', package_controller.show
 app.get '/categories', category_controller.index
 app.get '/categories/:name', category_controller.show
-# app.get '/search', package_controller.search
+app.get '/search', package_controller.search
 # app.post '/packages/:name/like', package_controller.like
 
 

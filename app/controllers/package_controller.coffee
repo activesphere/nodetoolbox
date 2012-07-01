@@ -1,4 +1,6 @@
 Package  = require '../models/package'
+logger = require 'winston'
+util = require 'util'
 
 module.exports = PackageController =
   home: (req, res, next) ->
@@ -34,6 +36,9 @@ module.exports = PackageController =
         return next(err)
       res.render 'recently_added', layout: false, results: results, title: "Recently added packages"
 
-
-
-           
+# This should have mapped to index, but legacy wise it's needed
+  search: (req, res, next) ->
+    Package.search req.query.q, (err, matches) ->
+      if(err)
+        return next(err)
+      res.render 'search_result', response: matches, title: "Search - #{req.query.q}"

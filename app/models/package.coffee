@@ -2,6 +2,8 @@ _ = require 'underscore'
 Category = require './category'
 Conf = require '../../lib/conf'
 logger = require 'winston'
+async = require 'async'
+util = require 'util'
 
 Package = {}
 
@@ -52,7 +54,6 @@ Package.recently_added = (count = 10, cb) ->
     if(err)
       return cb err
     cb null, results
-  
 
 Package.find = (name, cb) ->
   Conf.metadataDatabase.get name, (err, doc) ->
@@ -65,5 +66,23 @@ Package.find = (name, cb) ->
       Conf.redisClient.scard "#{name}:like", (err, reply) ->
         _.extend pkg, likes: reply || 0
         cb null, pkg
+
+Package.search = (query, callback) ->
+  if query?.trim() isnt ''
+    query = query.trim()
+    Conf.packageDatabase.view "search/all", key: query, include_docs: false, (err, result) ->
+      docs = _.uniq result, false, (item) -> item['id']
+      docs = _.map docs, (doc) -> id: doc.id, doc: {id: doc.id, description: doc.value?.description, author: doc.value?.author}
+      async.sortBy(docs, (doc, cb) ->
+        Conf.metadataDatabase.get doc.id, (err, doc) ->
+          if doc?.github
+            cb err, -(doc.github.watchers + doc.github.forks)
+          else
+            cb(null, 0)
+      , (err, results) ->
+        if err
+          callback err
+        callback null, {key:query, result: results}
+        )
 
 module.exports = Package

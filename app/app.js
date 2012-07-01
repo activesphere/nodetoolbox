@@ -103,6 +103,8 @@
 
   app.get('/categories/:name', category_controller.show);
 
+  app.get('/search', package_controller.search);
+
   app.get('/top_dependent_packages', package_controller.top_by_dependencies);
 
   app.get('/recently_added', package_controller.recently_added);
