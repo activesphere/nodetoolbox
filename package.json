@@ -8,16 +8,14 @@
   "engines": { "node": ">= 0.6.0" },
   "node-version": ">0.6.0",
   "dependencies": {
-    "socket.io"       : "0.9.6",
     "jade"            : "0.26.1",
     "express"         : "2.5.11",
     "connect-redis"   : "1.1.0",
     "underscore"      : "1.2.1",  
-
     "coffee-script"   : "1.1.1",
     "everyauth"       : "0.2.32",
     "cradle"          : "0.6.3",
-    "hiredis"         : "0.1.12",
+    "hiredis"         : "0.1.14",
     "async"           : "0.1.22",
     "winston"         : "0.6.1",
     "redis"           : "0.7.2"
