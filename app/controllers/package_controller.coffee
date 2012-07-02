@@ -48,7 +48,7 @@ module.exports = PackageController =
     logger.info "Invoking Recently Added"
     Package.recently_added 10, (err, results) ->
       if err
-        logger.error err
+        logger.error util.inspect err
         return next(err)
       res.render 'recently_added', layout: false, results: results, title: "Recently added packages"
 
