@@ -20,5 +20,4 @@ exports.create = (Conf) ->
         User.findOrCreate 'github', githubUserData.id, githubUserData.login, accessToken, accessTokenSecret, promise
         promise
       .redirectPath('/');
-
   return auth
