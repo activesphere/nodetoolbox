@@ -4,6 +4,7 @@ util = require 'util'
 
 module.exports = PackageController =
   home: (req, res, next) ->
+    console.log "home page request"
     logger.info "Home page request"
     Package.by_category null, 10, (err, categories) ->
       if err
