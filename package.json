@@ -9,6 +9,7 @@
   "dependencies": {
     "jade"            : "0.26.1",
     "express"         : "2.5.11",
+    "connect"         : "2.3.5",
     "connect-redis"   : "1.1.0",
     "underscore"      : "1.2.1",  
     "coffee-script"   : "1.1.1",
