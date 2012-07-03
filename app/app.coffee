@@ -76,7 +76,7 @@ app.get '/top_dependent_packages', package_controller.top_by_dependencies
 app.get '/recently_added', package_controller.recently_added
 
 port = process.env.PORT || 4000
-
+console.log "Node Version is #{process.version}"
 app.listen port, () ->
   logger.info "app started at port #{port}"
 
