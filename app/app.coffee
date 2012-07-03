@@ -1,6 +1,5 @@
 coffee    = require 'coffee-script'
 express   = require 'express'
-cron      = require 'cron'
 util      = require 'util'
 logger    = require 'winston'
 
@@ -79,14 +78,3 @@ port = process.env.PORT || 4000
 console.log "Node Version is #{process.version}"
 app.listen port, () ->
   logger.info "app started at port #{port}"
-
-do packages.watch_updates
-
-if process.env.ENV_VARIABLE is 'production'
-  new cron.CronJob '0 0 6,18 * * * *', () ->
-    logger.info "Running github sync Cron now"
-    packages.import_from_github {}, helper.print("github sync")
-      
-  new cron.CronJob '0 0 5,17 * * * *', () ->
-    logger.info "Running Import job Cron now"
-    packages.import_from_npm {}, helper.print("NPM Import")

@@ -13,8 +13,8 @@ Package.watch_updates = () ->
 Package.by_category = (category_name, top_count = 10, cb) ->
   Category.all category_name, (err, docs) ->
     if err 
+      logger.error err
       return cb(err)
-
     all_docs_for_category = {}
     _.each docs, (doc) ->
         all_docs_for_category[doc.key] = [] unless all_docs_for_category[doc.key]
@@ -56,13 +56,13 @@ Package.recently_added = (count = 10, cb) ->
     cb null, results
 
 Package.find = (name, cb) ->
-  Conf.metadataDatabase.get name, (err, doc) ->
-    if err
-      return cb err
-    Conf.packageDatabase.get name, (error, pkg) ->
-      if error
-        return cb error
-      _.extend pkg, doc
+  Conf.packageDatabase.get name, (error, pkg) ->
+    console.log name
+    if error
+      return cb error
+    Conf.metadataDatabase.get name, (err, doc) ->
+      if !err
+        _.extend pkg, doc
       Conf.redisClient.scard "#{name}:like", (err, reply) ->
         _.extend pkg, likes: reply || 0
         cb null, pkg
