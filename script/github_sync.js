@@ -9,10 +9,12 @@ var _ = require('underscore');
 
 Package.gitPackages(function(err, packages){
   async.forEachLimit(_.flatten([packages]), 20, function(package, cb){
+    logger.info("Github :"+package.id);
     Github.getInfo(package.value, function(err, githubPackageInfo){
+      logger.info('Got Data for '+package.id);
       if(err){
         logger.error("Could not find info for"+ util.inspect(package.value));
-        return cb(err);
+        return cb(null);
       }
       Package.updateMetadata(package, githubPackageInfo, function(err, code){
         if(err){
@@ -23,7 +25,11 @@ Package.gitPackages(function(err, packages){
       cb(null, githubPackageInfo);
     });
   }, function(err){
-    logger.error("Error fetching document " + util.inspect(err));
+    if(err){
+      logger.error("Error fetching document " + util.inspect(err));
+    }else {
+      process.exit(0);
+    }
   });
 });
 

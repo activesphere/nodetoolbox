@@ -101,7 +101,7 @@ Package.updateMetadata = (package, info, cb) ->
     cb = helper.print
   Conf.metadataDatabase.get package.id , (err, doc) ->
     if err
-      logger.error "Document is not found #{package.id}  #{utils.inspect(err)}"
+      logger.error "Document is not found #{package.id}  #{util.inspect(err)}"
       logger.info "Creating a new package..."
       Conf.metadataDatabase.save package.id, github: info, cb
     if doc
