@@ -4,6 +4,7 @@ Conf = require '../../lib/conf'
 logger = require 'winston'
 async = require 'async'
 util = require 'util'
+helper = require '../../lib/helper'
 
 Package = {}
 
@@ -91,5 +92,22 @@ Package.search = (query, callback) ->
           callback err
         callback null, {key:query, result: results}
         )
+
+Package.gitPackages = (cb) ->
+  Conf.packageDatabase.view 'repositories/git', include_docs: false, cb
+
+Package.updateMetadata = (package, info, cb) ->
+  if not cb
+    cb = helper.print
+  Conf.metadataDatabase.get package.id , (err, doc) ->
+    if err
+      logger.error "Document is not found #{package.id}  #{utils.inspect(err)}"
+      logger.info "Creating a new package..."
+      Conf.metadataDatabase.save package.id, github: info, cb
+    if doc
+      data = {}
+      _.extend data, doc, github: info
+      Conf.metadataDatabase.save package.id, doc['_rev'], data, cb
+  
 
 module.exports = Package
