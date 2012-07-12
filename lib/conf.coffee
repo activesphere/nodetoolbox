@@ -1,4 +1,4 @@
-cradle = require 'cradle'
+cradle = require 'sreeix-cradle'
 redis  = require 'redis'
 Conf = exports = module.exports
 
@@ -32,3 +32,6 @@ Conf.npmDb = new cradle.Connection(Conf.couchdb.npm_registry.host, Conf.couchdb.
 
 Conf.redisClient =  redis.createClient Conf.redis.port, Conf.redis.host
 Conf.redisClient.auth Conf.redis.auth
+
+Conf.isBackground = () ->
+  process.env.npm_package_config_run_background_tasks is 'true' || false

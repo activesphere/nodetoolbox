@@ -78,3 +78,7 @@ port = process.env.PORT || 4000
 console.log "Node Version is #{process.version}"
 app.listen port, () ->
   logger.info "app started at port #{port}"
+
+if Conf.isBackground()
+  background = require '../background'
+  background.start()
