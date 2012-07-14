@@ -82,5 +82,5 @@ app.listen port, () ->
   logger.info "app started at port #{port}"
 
 if Conf.isBackground()
-  background = require '../background'
+  background = require './background'
   background.start()
