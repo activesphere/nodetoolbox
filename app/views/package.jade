@@ -104,3 +104,6 @@
             ul.unstyled
               each dependency_version, dependency in version.devDependencies
                 li #{dependency} #{dependency_version}
+      hr
+      a(name='readme')
+      .readme_js(data-owner='#{package.github.owner.login}', data-repo='#{package.github.name}')
