@@ -39,7 +39,6 @@
       return req.flash();
     },
     production: function() {
-      logger.error("----------" + (process.env.NODE_ENV === 'production'));
       return process.env.NODE_ENV === 'production';
     }
   };
