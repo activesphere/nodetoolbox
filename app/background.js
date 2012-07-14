@@ -8,8 +8,8 @@ var async = require('async');
 var _ = require('underscore');
 
 var Sync = {
-  github: require('./lib/github_sync').github,
-  npm   : require('./lib/npm_sync').npm
+  github: require('../lib/github_sync').github,
+  npm   : require('../lib/npm_sync').npm
 };
 
 new cron.CronJob( '0 0 6,18 * * * *', function(){
