@@ -221,13 +221,14 @@ footer {
 #when-updated span.label.timeago {
   border-radius: 0px 3px 3px 0px;  
 }
-#like {
+#like, #forks, #watchers {
   display: inline;
+  margin : 0px 40px 0px 40px;
 }
-#like a {
+#like a, #forks a, #watchers a {
   padding: 2px 19px;
 }
-#like .twipsy {
+#like .twipsy, #forks .twipsy,  #watchers .twipsy {
   display: inline;
   margin-top: 7px;
 }

@@ -14,11 +14,22 @@
         .twipsy-arrow
         .twipsy-inner.like_count #{package.likes}
     if package.github
+      #forks
+        a.btn.small.info(href="#") Forks
+        .twipsy.right.in
+          .twipsy-arrow
+          .twipsy-inner #{package.github.forks}
+      #watchers
+        a.btn.small.info(href="#") Watchers
+        .twipsy.right.in
+          .twipsy-arrow
+          .twipsy-inner #{package.github.watchers}
+    
       whenUpdated = new Date(package.github.pushed_at).toISOString()
         #when-updated
           span.notice.label Last Updated : 
           span.label.notice.timeago(title='#{whenUpdated}') #{whenUpdated}
-        
+
   div
     blockquote= package.description
       &nbsp;&nbsp;
@@ -43,8 +54,6 @@
             if package.github
               li URL: &nbsp;
                 a(href='#{package.github.url}') #{package.github.url}
-              li Forks: #{package.github.forks}
-              li Watchers: #{package.github.watchers}
 
     hr
     .package-section
