@@ -15,7 +15,7 @@
     "underscore"      : "1.2.1",  
     "coffee-script"   : "1.1.1",
     "everyauth"       : "0.2.32",
-    "sreeix-cradle"   : "0.0.4",
+    "sreeix-cradle"   : "0.0.5",
     "hiredis"         : "0.1.14",
     "async"           : "0.1.22",
     "winston"         : "0.6.1",
