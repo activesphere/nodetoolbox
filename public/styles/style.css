@@ -232,13 +232,3 @@ footer {
   display: inline;
   margin-top: 7px;
 }
-#like .twipsy-arrow {
-  border-right-color:  #339BB9;
-}
-#like .twipsy-inner {
-  color: #339BB9;
-  background-color: transparent;
-  border: 1px solid #339BB9;
-  padding: 0px 19px;
-  font-weight: bold;
-}
