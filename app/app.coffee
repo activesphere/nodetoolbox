@@ -21,6 +21,8 @@ helpers =
     req.session.auth.github.user
   flash: (req) ->
     req.flash()
+  production: () ->
+    process.env.NODE_ENV == 'production'
 
 ensureAuthenticated = (req, res, next) ->
   if req.loggedIn

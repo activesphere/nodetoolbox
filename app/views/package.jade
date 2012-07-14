@@ -21,6 +21,8 @@
         
   div
     blockquote= package.description
+      &nbsp;&nbsp;
+      a(href="#readme") More..
     .alert-message
       h4
         if latest && latest.preferGlobal
@@ -39,7 +41,7 @@
             if package.repository
               li Type: #{package.repository.type}
             if package.github
-              li URL:
+              li URL: &nbsp;
                 a(href='#{package.github.url}') #{package.github.url}
               li Forks: #{package.github.forks}
               li Watchers: #{package.github.watchers}
@@ -53,16 +55,14 @@
               each category in package.categories
                 dt
                   a(href='/categories/' + encodeURIComponent(category)) #{category}
-    hr
-    if package.versions && package.versions[latest_tag]
-      - version = package.versions[latest_tag]
-      .package-section
-        if version.engines
-          .span8
-            h5 Engines:
-            dl
-              each engine_version, engine_name in version.engines
-                dt #{engine_name} #{engine_version}
+      if package.versions && package.versions[latest_tag]
+        - version = package.versions[latest_tag]
+        .package-section
+          if version.engines
+              h5 Engines:
+              dl
+                each engine_version, engine_name in version.engines
+                  dt #{engine_name} #{engine_version}
       hr
       .package-section
         .span5
