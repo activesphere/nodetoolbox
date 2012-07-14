@@ -1,7 +1,7 @@
 require('coffee-script');
 var cron = require('cron');
 var logger = require('winston');
-var Conf = require('../lib/conf/conf');
+var Conf = require('../lib/conf');
 var Package = require('./models/package');
 var helper = require('../lib/helper');
 var async = require('async');
