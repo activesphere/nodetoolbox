@@ -11,7 +11,7 @@ var Sync = {
   github: require('../lib/github_sync').github,
   npm   : require('../lib/npm_sync').npm
 };
-exports.start = function(){
+module.exports.start = function(){
   new cron.CronJob( '0 0 6,18 * * * *', function(){
     logger.info( "Running github sync Cron now");
     Sync.github();
