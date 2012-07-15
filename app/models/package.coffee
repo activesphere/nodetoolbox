@@ -6,7 +6,11 @@ async = require 'async'
 util = require 'util'
 helper = require '../../lib/helper'
 
-Package = {}
+Package = (attr = {}) ->
+  this.attributes = attr
+
+Object.defineProperty(Package.prototype, "owner", {get: () -> this.attributes.github?.owner?.login || this.attributes.package.github.owner})
+Object.defineProperty(Package.prototype, "repositoryName", {get: () -> this.attributes.github?.name})
 
 Package.watch_updates = () ->
   logger.info "Watching Updates from Couchdb"
@@ -66,7 +70,7 @@ Package.find = (name, cb) ->
         _.extend pkg, doc
       Conf.redisClient.scard "#{name}:like", (err, reply) ->
         _.extend pkg, likes: reply || 0
-        cb null, pkg
+        cb null, new Package(pkg)
 
 Package.like = (package, user, callback) ->
   Conf.redisClient.sadd "#{package}:like", user, (err, val) ->
