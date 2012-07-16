@@ -232,3 +232,7 @@ footer {
   display: inline;
   margin-top: 7px;
 }
+
+.tile .package-section {
+    white-space: normal;
+}
