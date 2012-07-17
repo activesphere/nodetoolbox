@@ -122,6 +122,7 @@
   });
 
   if (Conf.isBackground()) {
+    logger.info("This is a background box. starting the background processes.");
     background = require('./background');
     background.start();
   }
