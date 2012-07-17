@@ -27,6 +27,7 @@
   }, "scripts": {
     "start": "node app/app.js",
     "github-sync": "node script/github_sync.js",
+    "npm-sync": "node script/npm_sync.js",
     "console": "node"
   }
 }
