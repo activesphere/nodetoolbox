@@ -25,9 +25,9 @@ module.exports = PackageController =
       if err
         logger.error err
         return next(err)
-      latest_tag =  pkg["dist-tags"]?.latest ? ""
-      latest = pkg.versions?[latest_tag]
-      res.render 'package', package: pkg, title: req.params.name, latest_tag: latest_tag, latest: latest 
+      console.log(pkg.attributes['dist-tags'])
+      console.log(pkg.authorName)
+      res.render 'package', package: pkg, title: req.params.name 
 
   index: (req, res, next) ->
     logger.info "Index Package #{req.query.key}"

@@ -8,9 +8,30 @@ helper = require '../../lib/helper'
 
 Package = (attr = {}) ->
   this.attributes = attr
+  this.github = attr.github
+  this
 
-Object.defineProperty(Package.prototype, "owner", {get: () -> this.attributes.github?.owner?.login || this.attributes.package.github.owner})
-Object.defineProperty(Package.prototype, "repositoryName", {get: () -> this.attributes.github?.name})
+Object.defineProperty Package.prototype, "owner", {get: () -> this.github?.owner?.login || this.attributes.package.github.owner}
+Object.defineProperty Package.prototype, "authorName", get: () -> this.latestVersion.author?.name or "Unknown"
+Object.defineProperty Package.prototype, "name",  get: () -> this.attributes.name or this.attributes["_id"]
+Object.defineProperty Package.prototype, "repositoryName", { get: () -> this.github?.name}
+Object.defineProperty Package.prototype, "latestVersion",  get: () -> this.attributes.versions[this.attributes['dist-tags']?.latest]
+Object.defineProperty Package.prototype, "lastUpdatedOn",  get: () -> new Date(this.github.pushed_at).toISOString()
+Object.defineProperty Package.prototype, "homepage",  get: () -> this.latestVersion?.homepage || this.attributes.author?.url
+Object.defineProperty Package.prototype, "engines",  get: () -> this.latestVersion?.engines || []
+Object.defineProperty Package.prototype, "contributers",  get: () -> this.latestVersion?.contributers || []
+Object.defineProperty Package.prototype, "maintainers",  get: () -> this.latestVersion?.maintainers || []
+Object.defineProperty Package.prototype, "categories",  get: () -> this.attributes.categories || []
+Object.defineProperty Package.prototype, "dependencies",  get: () -> this.latestVersion?.dependencies || []
+Object.defineProperty Package.prototype, "devDependencies",  get: () -> this.latestVersion?.devDependencies || []
+Object.defineProperty Package.prototype, "codeCommand",  get: () ->
+  "git clone #{this.attributes.repository.url}"   if this.attributes.repository?.type == 'git' and this.attributes.repository?.url
+
+Object.defineProperty Package.prototype, "installCommand",  get: () ->
+  if this.latestVersion?.preferGlobal  or this.latestVersion?.preferGlobal == 'true'
+    "npm install -g #{this.attributes['_id']}"
+  else
+    "npm install #{this.attributes['_id']}"
 
 Package.watch_updates = () ->
   logger.info "Watching Updates from Couchdb"
@@ -72,11 +93,11 @@ Package.find = (name, cb) ->
         _.extend pkg, likes: reply || 0
         cb null, new Package(pkg)
 
-Package.like = (package, user, callback) ->
-  Conf.redisClient.sadd "#{package}:like", user, (err, val) ->
+Package.like = (pkg, user, callback) ->
+  Conf.redisClient.sadd "#{pkg}:like", user, (err, val) ->
     if err
       return callback err
-    Conf.redisClient.scard "#{package}:like", (err, val) ->
+    Conf.redisClient.scard "#{pkg}:like", (err, val) ->
       callback err, val
 
 Package.search = (query, callback) ->
@@ -100,18 +121,18 @@ Package.search = (query, callback) ->
 Package.gitPackages = (cb) ->
   Conf.packageDatabase.view 'repositories/git', include_docs: false, cb
 
-Package.updateMetadata = (package, info, cb) ->
+Package.updateMetadata = (pkg, info, cb) ->
   if not cb
     cb = helper.print
-  Conf.metadataDatabase.get package.id , (err, doc) ->
+  Conf.metadataDatabase.get pkg.id , (err, doc) ->
     if err
-      logger.error "Document is not found #{package.id}  #{util.inspect(err)}"
+      logger.error "Document is not found #{pkg.id}  #{util.inspect(err)}"
       logger.info "Creating a new package..."
-      Conf.metadataDatabase.save package.id, github: info, cb
+      Conf.metadataDatabase.save pkg.id, github: info, cb
     if doc
       data = {}
       _.extend data, doc, github: info
-      Conf.metadataDatabase.save package.id, doc['_rev'], data, cb
+      Conf.metadataDatabase.save pkg.id, doc['_rev'], data, cb
   
 
 module.exports = Package

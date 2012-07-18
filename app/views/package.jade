@@ -1,18 +1,16 @@
 .tile
   .header
-    - home_page = (package.versions && package.versions[latest_tag]) ? package.versions[latest_tag].homepage : (package.author ? package.author.url : "")
     h2
-      if home_page
-        a(href=home_page) #{package.name || package["_id"]}
+      if package.home_page
+        a(href=package.homepage) #{package.name}
       else
-        = package.name || package["_id"]
-    if latest_tag
-      span#latest-tag.label(title='latest')= latest_tag
+        = package.name
+    span#latest-tag.label(title='latest')= package.latestVersion.version
     #like
-      a.btn.small.info(href="#", data-package='#{package.name || package["_id"]}') Like
+      a.btn.small.info(href="#", data-package='#{package.name}') Like
       .twipsy.right.in
         .twipsy-arrow
-        .twipsy-inner.like_count #{package.likes}
+        .twipsy-inner.like_count #{package.attributes.likes}
     if package.github
       #forks
         a.btn.small.info(href="#") Forks
@@ -25,32 +23,29 @@
           .twipsy-arrow
           .twipsy-inner #{package.github.watchers}
     
-      whenUpdated = new Date(package.github.pushed_at).toISOString()
         #when-updated
           span.notice.label Last Updated : 
-          span.label.notice.timeago(title='#{whenUpdated}') #{whenUpdated}
+          span.label.notice.timeago(title='#{package.lastUpdatedOn}') #{package.lastUpdatedOn}
 
   div
-    blockquote= package.description
+    blockquote= package.attributes.description
       &nbsp;&nbsp;
       a(href="#readme") More..
-    .alert-message
-      h4
-        if latest && latest.preferGlobal
-          | INSTALL » npm install -g #{package['_id']}
-        else
-          | INSTALL » npm install #{package['_id']}
-    if package.repository && package.repository.url && package.repository.url && package.repository.type === 'git'
+    if package.installCommand
       .alert-message
         h4
-          | CODE » git clone #{package.repository.url}
+          | INSTALL » #{package.installCommand}
+    if package.codeCommand
+      .alert-message
+        h4
+          | CODE » #{package.codeCommand}
 
     .package-section
       .span8
         h5 Repository:
           ul
-            if package.repository
-              li Type: #{package.repository.type}
+            if package.attributes.repository
+              li Type: #{package.attributes.repository.type}
             if package.github
               li URL: &nbsp;
                 a(href='#{package.github.url}') #{package.github.url}
@@ -59,50 +54,42 @@
     .package-section
       .span8
         h5 Categories:
-          if package.categories
-            dl 
-              each category in package.categories
-                dt
-                  a(href='/categories/' + encodeURIComponent(category)) #{category}
-      if package.versions && package.versions[latest_tag]
-        - version = package.versions[latest_tag]
-        .package-section
-          if version.engines
-              h5 Engines:
-              dl
-                each engine_version, engine_name in version.engines
-                  dt #{engine_name} #{engine_version}
+          dl 
+            each category in package.categories
+              dt
+                a(href='/categories/' + encodeURIComponent(category)) #{category}
+    .package-section
+      h5 Engines:
+      dl
+        each engine_version, engine_name in package.engines
+          dt #{engine_name} #{engine_version}
       hr
       .package-section
         .span5
           h5 Author
           ul.unstyled
-            li= ( version.author && version.author.name ) || "Unknown"
+            li=  Unknown
         .span5
           h5 Contributors
-          if version.contributors !== undefined
-            ul.unstyled
-              each contributor in version.contributors
-                li= contributor.name
+          ul.unstyled
+            each contributor in package.contributors
+              li= contributor.name
         .span4
           h5 Maintainers
-          if version.maintainers
             ul.unstyled
-              each maintainer in version.maintainers
-                li= maintainer["name"]
+              each maintainer in package.maintainers
+                li= maintainer.name
       hr
       .package-section
         .span5
           h5 Dependencies:
-          if version.dependencies
             ul.unstyled
-              each dependency_version, dependency in version.dependencies
+              each dependency_version, dependency in package.dependencies
                 li #{dependency} #{dependency_version}
         .span5
           h5 Dev Dependencies:
-          if version.devDependencies
             ul.unstyled
-              each dependency_version, dependency in version.devDependencies
+              each dependency_version, dependency in package.devDependencies
                 li #{dependency} #{dependency_version}
       if(package.github)
         hr
