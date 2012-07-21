@@ -12,7 +12,8 @@ Package = (attr = {}) ->
   this
 
 Object.defineProperty Package.prototype, "owner", {get: () -> this.github?.owner?.login || this.attributes.package.github.owner}
-Object.defineProperty Package.prototype, "authorName", get: () -> this.latestVersion.author?.name or "Unknown"
+Object.defineProperty Package.prototype, "authorName", get: () -> this.attributes.author?.name or "Unknown"
+Object.defineProperty Package.prototype, "authorEmail", get: () -> this.attributes.author?.email or ""
 Object.defineProperty Package.prototype, "name",  get: () -> this.attributes.name or this.attributes["_id"]
 Object.defineProperty Package.prototype, "repositoryName", { get: () -> this.github?.name}
 Object.defineProperty Package.prototype, "latestVersion",  get: () -> this.attributes.versions[this.attributes['dist-tags']?.latest]
@@ -28,7 +29,7 @@ Object.defineProperty Package.prototype, "codeCommand",  get: () ->
   "git clone #{this.attributes.repository.url}"   if this.attributes.repository?.type == 'git' and this.attributes.repository?.url
 
 Object.defineProperty Package.prototype, "installCommand",  get: () ->
-  if this.latestVersion?.preferGlobal  or this.latestVersion?.preferGlobal == 'true'
+  if this.latestVersion?.preferGlobal == true
     "npm install -g #{this.attributes['_id']}"
   else
     "npm install #{this.attributes['_id']}"
@@ -83,7 +84,6 @@ Package.recently_added = (count = 10, cb) ->
 
 Package.find = (name, cb) ->
   Conf.packageDatabase.get name, (error, pkg) ->
-    console.log name
     if error
       return cb error
     Conf.metadataDatabase.get name, (err, doc) ->
@@ -122,8 +122,7 @@ Package.gitPackages = (cb) ->
   Conf.packageDatabase.view 'repositories/git', include_docs: false, cb
 
 Package.updateMetadata = (pkg, info, cb) ->
-  if not cb
-    cb = helper.print
+  cb = cb || helper.print
   Conf.metadataDatabase.get pkg.id , (err, doc) ->
     if err
       logger.error "Document is not found #{pkg.id}  #{util.inspect(err)}"
@@ -133,6 +132,5 @@ Package.updateMetadata = (pkg, info, cb) ->
       data = {}
       _.extend data, doc, github: info
       Conf.metadataDatabase.save pkg.id, doc['_rev'], data, cb
-  
 
 module.exports = Package

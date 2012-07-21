@@ -29,8 +29,9 @@
 
   div
     blockquote= package.attributes.description
-      &nbsp;&nbsp;
-      a(href="#readme") More..
+
+      |   --  
+      a(href="#readme") Read More
     if package.installCommand
       .alert-message
         h4
@@ -58,40 +59,45 @@
             each category in package.categories
               dt
                 a(href='/categories/' + encodeURIComponent(category)) #{category}
+      .span8
+        h5 Engines:
+        dl
+          each engine_version, engine_name in package.engines
+            dt #{engine_name} #{engine_version}
+    hr
     .package-section
-      h5 Engines:
-      dl
-        each engine_version, engine_name in package.engines
-          dt #{engine_name} #{engine_version}
-      hr
-      .package-section
-        .span5
-          h5 Author
+      .span5
+        h5 Author:
+        ul.unstyled
+          if(!package.authorEmail)
+            li= package.authorName
+          else
+            li
+              a(href='mailto:'+package.authorEmail) #{package.authorName}
+      .span5
+        h5 Contributers
           ul.unstyled
-            li=  Unknown
-        .span5
-          h5 Contributors
+            each contributer in package.contributers
+              li= contributer.name
+
+      .span5
+        h5 Maintainers
+        ul.unstyled
+          each contributor in package.maintainers
+            li= contributor.name
+    hr
+    .package-section
+      .span5
+        h5 Dependencies:
           ul.unstyled
-            each contributor in package.contributors
-              li= contributor.name
-        .span4
-          h5 Maintainers
-            ul.unstyled
-              each maintainer in package.maintainers
-                li= maintainer.name
+            each dependency_version, dependency in package.dependencies
+              li #{dependency} #{dependency_version}
+      .span5
+        h5 Dev Dependencies:
+          ul.unstyled
+            each dependency_version, dependency in package.devDependencies
+              li #{dependency} #{dependency_version}
+    if(package.github)
       hr
-      .package-section
-        .span5
-          h5 Dependencies:
-            ul.unstyled
-              each dependency_version, dependency in package.dependencies
-                li #{dependency} #{dependency_version}
-        .span5
-          h5 Dev Dependencies:
-            ul.unstyled
-              each dependency_version, dependency in package.devDependencies
-                li #{dependency} #{dependency_version}
-      if(package.github)
-        hr
-        a(name='readme')
-        .readme_js(data-owner='#{package.owner}', data-repo='#{package.repositoryName}')
+      a(name='readme')
+      .readme_js(data-owner='#{package.owner}', data-repo='#{package.repositoryName}')

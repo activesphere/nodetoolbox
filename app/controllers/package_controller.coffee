@@ -33,7 +33,9 @@ module.exports = PackageController =
     logger.info "Index Package #{req.query.key}"
     Package.all req.query.key, (err, packages_info) ->
       if err
+        logger.error "---------------------------------------------------------------------------------------------"
         logger.error err
+        logger.error "---------------------------------------------------------------------------------------------"
         return next(err)
       res.render 'packages', key: packages_info.key, packages: packages_info.docs, title: 'All Packages'
 
