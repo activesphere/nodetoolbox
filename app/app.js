@@ -115,15 +115,15 @@
 
   port = process.env.PORT || 4000;
 
-  console.log("Node Version is " + process.version);
 
   app.listen(port, function() {
-    return logger.info("app started at port " + port);
+    logger.info("app started at port " + port);
+    logger.info("Node Version is " + process.version);
   });
 
   if (Conf.isBackground()) {
     logger.info("This is a background box. starting the background processes.");
-    background = require('./background');
+    var background = require('./background');
     background.start();
   }
 

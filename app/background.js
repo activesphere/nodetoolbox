@@ -12,13 +12,13 @@ var Sync = {
   npm   : require('../lib/npm_sync').npm
 };
 module.exports.start = function(){
-  new cron.CronJob( '0 0 6,18 * * * *', function(){
+  new cron.CronJob( '0 0 0/3 * * *', function(){
     logger.info( "Running github sync Cron now");
     Sync.github();
-  });
+  }).start();
 
-  new cron.CronJob('0 0 5,17 * * * *', function(){
+  new cron.CronJob('5 5 5 * * *', function(){
     logger.info( "Running Import job Cron now");
     Sync.npm();
-  });
+  }).start();
 }
