@@ -42,7 +42,7 @@ Package.watch_updates = () ->
 Package.by_category = (category_name, top_count = 10, cb) ->
   Category.all category_name, (err, docs) ->
     if err 
-      logger.error err
+      logger.error util.inspect(err)
       return cb(err)
     all_docs_for_category = {}
     _.each docs, (doc) ->

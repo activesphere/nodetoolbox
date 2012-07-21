@@ -1,7 +1,7 @@
 Conf      = require '../../lib/conf'
 extensions= require '../../lib/extensions'
 logger = require 'winston'
-
+util = require 'util'
 extensions.createIfNotExisting Conf.userDatabase
 
 exports.findOrCreate = (source, userId, userName, accessToken, accessTokenSecret, promise) ->
@@ -16,7 +16,7 @@ exports.findOrCreate = (source, userId, userName, accessToken, accessTokenSecret
     else
       create source, userId, userName, accessToken, (err, doc)->
         if err
-          logger.error(err)
+          logger.error util.inspect(err)
           return promise.fail(err)
         promise.fulfill doc
 
