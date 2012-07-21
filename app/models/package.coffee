@@ -42,7 +42,10 @@ Package.watch_updates = () ->
   logger.info "Watching Updates from Couchdb"
 
 Package.by_category = (category_name, top_count = 10, cb) ->
-  Category.all {key: category_name, include_docs:false}, (err, docs) ->
+  opts = {include_docs: false}
+  if( category_name )
+    opts.key = category_name
+  Category.all opts , (err, docs) ->
     if err 
       logger.error util.inspect(err)
       return cb(err)
