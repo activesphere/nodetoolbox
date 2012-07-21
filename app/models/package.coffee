@@ -25,6 +25,7 @@ Object.defineProperty Package.prototype, "maintainers",  get: () -> this.latestV
 Object.defineProperty Package.prototype, "categories",  get: () -> this.attributes.categories || []
 Object.defineProperty Package.prototype, "dependencies",  get: () -> this.latestVersion?.dependencies || []
 Object.defineProperty Package.prototype, "devDependencies",  get: () -> this.latestVersion?.devDependencies || []
+Object.defineProperty Package.prototype, "rank",  get: () -> if this.attributes.github then (this.attributes.github.forks + this.attributes.github.watchers) else 0
 Object.defineProperty Package.prototype, "codeCommand",  get: () ->
   "git clone #{this.attributes.repository.url}"   if this.attributes.repository?.type == 'git' and this.attributes.repository?.url
 
@@ -50,8 +51,8 @@ Package.by_category = (category_name, top_count = 10, cb) ->
 
     for category, packages of all_docs_for_category
       count = packages.length
-      results[category] = 
-        docs: _.first _.sortBy(packages, (a, b) ->  (b.forks + b.watchers) - (a.forks + a.watchers)), top_count
+      results[category] =
+        docs: _.first _.sortBy(packages, (a) -> -(a.forks + a.watchers)), top_count
         count: count
     cb null, results
 
