@@ -11,7 +11,7 @@ Package = (attr = {}) ->
   this.github = attr.github
   this
 
-Object.defineProperty Package.prototype, "owner", {get: () -> this.github?.owner?.login || this.attributes.package.github.owner}
+Object.defineProperty Package.prototype, "owner", {get: () -> this.github?.owner?.login || this.attributes.github.owner}
 Object.defineProperty Package.prototype, "authorName", get: () -> this.attributes.author?.name or "Unknown"
 Object.defineProperty Package.prototype, "authorEmail", get: () -> this.attributes.author?.email or ""
 Object.defineProperty Package.prototype, "name",  get: () -> this.attributes.name or this.attributes["_id"]
