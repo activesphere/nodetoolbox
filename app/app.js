@@ -109,21 +109,22 @@
 
   app.post('/packages/:name/like', package_controller.like);
 
+  app.post('/packages/:name', package_controller.updateCategories);
+
   app.get('/top_dependent_packages', package_controller.top_by_dependencies);
 
   app.get('/recently_added', package_controller.recently_added);
 
   port = process.env.PORT || 4000;
 
-
   app.listen(port, function() {
-    logger.info("app started at port " + port);
     logger.info("Node Version is " + process.version);
+    return logger.info("app started at port " + port);
   });
 
   if (Conf.isBackground()) {
     logger.info("This is a background box. starting the background processes.");
-    var background = require('./background');
+    background = require('./background');
     background.start();
   }
 

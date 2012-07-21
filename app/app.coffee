@@ -71,14 +71,15 @@ app.get '/categories', category_controller.index
 app.get '/categories/:name', category_controller.show
 app.get '/search', package_controller.search
 app.post '/packages/:name/like', package_controller.like
+app.post '/packages/:name', package_controller.updateCategories
 
 
 app.get '/top_dependent_packages', package_controller.top_by_dependencies
 app.get '/recently_added', package_controller.recently_added
 
 port = process.env.PORT || 4000
-console.log "Node Version is #{process.version}"
 app.listen port, () ->
+  logger.info "Node Version is #{process.version}"
   logger.info "app started at port #{port}"
 
 if Conf.isBackground()

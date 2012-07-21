@@ -1,4 +1,7 @@
 Package  = require '../models/package'
+Category = require '../models/category'
+_ = require 'underscore'
+
 logger = require 'winston'
 util = require 'util'
 
@@ -24,7 +27,8 @@ module.exports = PackageController =
       if err
         logger.error util.inspect(err)
         return next(err)
-      res.render 'package', package: pkg, title: req.params.name 
+      Category.all include_docs: false, (err, documents) ->
+        res.render 'package', package: pkg, title: req.params.name, allCategories: _.uniq(_.pluck documents, 'key')
 
   index: (req, res, next) ->
     logger.info "Index Package #{req.query.key}"
@@ -61,6 +65,14 @@ module.exports = PackageController =
         res.send  count: count
     else
       res.send "Please log in to Like", 403
+
+  updateCategories : (req, res, next) ->
+    logger.info "Updating categories on #{req.params.name} with #{req.body.categories}"
+    Package.updateMetadata req.params.name, categories: _.flatten( [req.body.categories]), (err, document) ->
+      if(err)
+        logger.error util.inspect(err)
+        return res.send "Something bad happened", 422
+      res.send  {}
 
 # This should have mapped to index, but legacy wise it's needed
   search: (req, res, next) ->

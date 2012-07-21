@@ -1,5 +1,10 @@
 $(document).ready () ->
   $('.package').twipsy()
+  $('.chosen-categories').chosen().change () ->
+    form = $(this).parent()
+    $.post form.attr('action'), form.serialize(), ()->
+      true
+    false
   $('span.timeago').timeago()
   unless $("#top_dependent_packages").length is 0
     $("#top_dependent_packages").ready () ->
@@ -19,7 +24,7 @@ $(document).ready () ->
     $(this).parent().hide()
 
   $('#like a').click () ->
-    package = $(this).data 'package'
-    jqXHR = $.ajax(type: 'POST',url: "/packages/#{package}/like")
+    pkg = $(this).data 'package'
+    jqXHR = $.ajax(type: 'POST',url: "/packages/#{pkg}/like")
     jqXHR.success (data) -> $('.like_count').text data.count
     jqXHR.fail (jqxhr, message) -> alert  jqxhr.responseText

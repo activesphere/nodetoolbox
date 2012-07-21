@@ -12,6 +12,7 @@ Package = (attr = {}) ->
   this
 
 
+Object.defineProperty Package.prototype, "id", get: () -> this.attributes._id
 Object.defineProperty Package.prototype, "owner", {get: () -> this.github?.owner?.login || this.attributes.github.owner}
 Object.defineProperty Package.prototype, "authorName", get: () -> this.attributes.author?.name or "Unknown"
 Object.defineProperty Package.prototype, "authorEmail", get: () -> this.attributes.author?.email or ""
@@ -36,11 +37,12 @@ Object.defineProperty Package.prototype, "installCommand",  get: () ->
   else
     "npm install #{this.attributes['_id']}"
 
+
 Package.watch_updates = () ->
   logger.info "Watching Updates from Couchdb"
 
 Package.by_category = (category_name, top_count = 10, cb) ->
-  Category.all category_name, (err, docs) ->
+  Category.all {key: category_name, include_docs:false}, (err, docs) ->
     if err 
       logger.error util.inspect(err)
       return cb(err)
@@ -125,14 +127,13 @@ Package.gitPackages = (cb) ->
 
 Package.updateMetadata = (pkg, info, cb) ->
   cb = cb || helper.print
-  Conf.metadataDatabase.get pkg.id , (err, doc) ->
+  Conf.metadataDatabase.get pkg , (err, doc) ->
     if err
-      logger.error "Document is not found #{pkg.id}  #{util.inspect(err)}"
+      logger.error "Document is not found #{pkg}  #{util.inspect(err)}"
       logger.info "Creating a new package..."
-      Conf.metadataDatabase.save pkg.id, github: info, cb
+      Conf.metadataDatabase.save pkg, info, cb
     if doc
-      data = {}
-      _.extend data, doc, github: info
-      Conf.metadataDatabase.save pkg.id, doc['_rev'], data, cb
+      data = _.extend {}, doc, info
+      Conf.metadataDatabase.save pkg, doc['_rev'], data, cb
 
 module.exports = Package

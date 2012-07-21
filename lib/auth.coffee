@@ -1,8 +1,11 @@
 auth    = require 'everyauth'
 User    = require '../app/models/user'
-auth.debug = true
+logger  = require 'winston'
+util    = require 'util'
+auth.debug = false
+
 exports.create = (Conf) ->
-  console.log(Conf.github)
+  logger.debug util.inspect(Conf.github)
   auth
     .github
       .apiHost('https://api.github.com')

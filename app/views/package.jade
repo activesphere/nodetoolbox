@@ -7,7 +7,7 @@
         = package.name
     span#latest-tag.label(title='latest')= package.latestVersion.version
     #like
-      a.btn.small.info(href="#", data-package='#{package.name}') Like
+      a.btn.small.info(href="#", data-package='#{package.id}') Like
       .twipsy.right.in
         .twipsy-arrow
         .twipsy-inner.like_count #{package.attributes.likes}
@@ -55,10 +55,11 @@
     .package-section
       .span8
         h5 Categories:
-          dl 
-            each category in package.categories
-              dt
-                a(href='/categories/' + encodeURIComponent(category)) #{category}
+          form(action='/packages/'+package.id, method='POST')
+            select.chosen-categories(data-placeholder='Select Categories', multiple ='', " style="width:350px;", name= 'categories')
+              for category in allCategories
+                option(selected=package.categories.indexOf(category) != -1) #{category}
+
       .span8
         h5 Engines:
         dl
@@ -83,8 +84,8 @@
       .span5
         h5 Maintainers
         ul.unstyled
-          each contributor in package.maintainers
-            li= contributor.name
+          each maintainer in package.maintainers
+            li= maintainer.name
     hr
     .package-section
       .span5
