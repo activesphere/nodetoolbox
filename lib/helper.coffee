@@ -1,5 +1,6 @@
 logger = require 'winston'
 util = require 'util'
+
 exports.print = (module = "") ->
   (err, info) ->
     if err
