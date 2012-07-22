@@ -5,7 +5,7 @@
   "version": "0.0.2",
   "repository": {"type": "git", "url" : "git@github.com:activesphere/nodetoolboxv2.git"},
   "main": "app/app.js",
-  "engines": { "node": "= 0.6.7" },
+  "engines": { "node": "=0.6.7" },
    "node-version": "=0.6.7",
   "dependencies": {
     "jade"            : "0.26.1",
