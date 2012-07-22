@@ -1,4 +1,4 @@
-coffee    = require 'coffee-script'
+require 'coffee-script'
 express   = require 'express'
 util      = require 'util'
 logger    = require 'winston'
