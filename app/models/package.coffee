@@ -19,7 +19,7 @@ Object.defineProperty Package.prototype, "authorEmail", get: () -> this.attribut
 Object.defineProperty Package.prototype, "name",  get: () -> this.attributes.name or this.attributes["_id"]
 Object.defineProperty Package.prototype, "repositoryName", { get: () -> this.github?.name}
 Object.defineProperty Package.prototype, "latestVersion",  get: () -> this.attributes.versions[this.attributes['dist-tags']?.latest]
-Object.defineProperty Package.prototype, "lastUpdatedOn",  get: () -> new Date(this.github.pushed_at).toISOString()
+Object.defineProperty Package.prototype, "lastUpdatedOn",  get: () -> if this.github then new Date(this.github?.pushed_at).toISOString() else "Unknown"
 Object.defineProperty Package.prototype, "homepage",  get: () -> this.latestVersion?.homepage || this.attributes.author?.url
 Object.defineProperty Package.prototype, "engines",  get: () -> this.latestVersion?.engines || []
 Object.defineProperty Package.prototype, "contributers",  get: () -> this.latestVersion?.contributers || []
