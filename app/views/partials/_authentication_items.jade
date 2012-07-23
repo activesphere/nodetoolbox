@@ -1,7 +1,9 @@
 if everyauth.loggedIn
   p(class='pull-right')
-    span(class='hello') Hello, #{everyauth.github ? everyauth.github.user.login : "guest"}
+    if everyauth.github.user.avatar_url
+      img.avatar(src='#{everyauth.github.user.avatar_url}', width="25", height="25")
+    span(class='hello') Hello, #{everyauth.github ? everyauth.github.user.name : "guest"}
     a(href='/logout') Logout
 else
-  p(class='pull-right')
+  p.pull-right
     a(href="/auth/github", class="btn github") Login with github
