@@ -56,6 +56,7 @@ module.exports = PackageController =
 
   like : (req, res, next) ->
     if req.session.auth
+      console.log(req.session.auth.github);
       logger.info "#{req.session.auth.github.login} likes #{req.params.name}"
 
       Package.like req.params.name, req.session.auth.github.user.login, (err, count) ->
