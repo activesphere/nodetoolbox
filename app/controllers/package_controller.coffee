@@ -16,7 +16,7 @@ module.exports = PackageController =
         if err
           logger.error util.inspect(err)
           return next(err)
-        res.render 'index', 
+        res.render 'index',
           categories: categories
           top_ranked_packages: top_ranked_packages
           title: 'Node.js happiness'
@@ -28,7 +28,7 @@ module.exports = PackageController =
         logger.error util.inspect(err)
         return next(err)
       Category.all include_docs: false, (err, documents) ->
-        res.render 'package', package: pkg, title: req.params.name, allCategories: _.uniq(_.pluck documents, 'key')
+        res.render 'package', package: pkg, title: req.params.name, layout: 'new_layout', allCategories: _.uniq(_.pluck documents, 'key')
 
   index: (req, res, next) ->
     logger.info "Index Package #{req.query.key}"
