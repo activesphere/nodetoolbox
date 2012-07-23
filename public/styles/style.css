@@ -73,7 +73,9 @@ a.package:hover {
   border: 1px solid #D8D8D8;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
   position: relative;
-  white-space:pre;white-space:pre-wrap;word-wrap:break-word;
+  white-space:pre;
+  white-space:pre-wrap;
+  word-wrap:break-word;
 }
 .category.tile {
   min-height: 155px;  
@@ -210,10 +212,10 @@ footer {
   margin-right: 10px;
 }
 .package-section {
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 #when-updated {
-  margin-right: 10px;
+  margin: 10px 0;
 }
 #when-updated span.label:first-child {
   border-radius: 3px 0 0 3px;
@@ -225,14 +227,27 @@ footer {
   display: inline;
   margin : 0px 40px 0px 40px;
 }
-#like a, #forks a, #watchers a {
-  padding: 2px 19px;
+
+body .navigation {
+    height: 40px;
 }
-#like .twipsy, #forks .twipsy,  #watchers .twipsy {
-  display: inline;
-  margin-top: 7px;
+body .navigation .brand {
+    background: url('/images/toolbox_icon.png') no-repeat;
+    padding: 8px 0 12px 40px;
+    margin: 0;
+}
+
+footer {
+    margin-top: 20px;
+    padding-top: 20px;
 }
 
 .tile .package-section {
     white-space: normal;
+}
+.tile .readme_js {
+    white-space: normal;
+}
+.tile .package-section.repo {
+    height: 90px;
 }

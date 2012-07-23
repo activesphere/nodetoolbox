@@ -1,5 +1,5 @@
 $(document).ready () ->
-  $('.package').twipsy()
+  $('.package').twipsy?()
   $('.chosen-categories').chosen().change () ->
     form = $(this).parent()
     $.post form.attr('action'), form.serialize(), ()->
