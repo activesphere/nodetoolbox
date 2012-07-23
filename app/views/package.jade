@@ -82,12 +82,16 @@
         h5 Dependencies:
           ul.unstyled
             each dependency_version, dependency in package.dependencies
-              li #{dependency} #{dependency_version}
+              li 
+                a(href='/packages/'+ dependency) #{dependency} 
+                #{dependency_version}
       .span6
         h5 Dev Dependencies:
           ul.unstyled
             each dependency_version, dependency in package.devDependencies
-              li #{dependency} #{dependency_version}
+              li 
+                a(href='/packages/'+ dependency) #{dependency} 
+                #{dependency_version}
     if(package.github)
       hr
       a(name="readme")
