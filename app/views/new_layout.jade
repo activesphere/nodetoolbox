@@ -6,11 +6,13 @@ html(leng="en")
     meta(name="Keywords", content="#{title}, node.js, nodejs, node, toolbox, node-toolbox, npm, package, express, github, catalogue, overview, categories, packages, activesphere")
     link(rel="shortcut icon", href="/favicon.ico")
     link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Lato", type="text/css")
+    link(rel="stylesheet", href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/themes/cupertino/jquery-ui.css", type="text/css")
     link(rel="stylesheet", href="/styles/bootstrap.2.0.4.min.css")
     link(rel="stylesheet", href="/styles/style.css", type="text/css", media="screen", charset="utf-8")
     link(rel="stylesheet", href="/styles/chosen.css", type="text/css", media="screen", charset="utf-8")
     link(rel="search", href="/opensearch.xml", type="application/opensearchdescription+xml")
   body
+  != partial("./partials/_signin_dialog")
     .navbar.navbar-fixed-top
       .navbar-inner
         .container-fluid.navigation
@@ -43,6 +45,7 @@ html(leng="en")
     != partial("./partials/_new_footer")
     behaviour
       script(src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.4.min.js")
+      script(src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/jquery-ui.min.js")
       script(src="/js/app.js")
       script(src="/js/jquery.timeago.js")
       script(src="/js/readme.js")

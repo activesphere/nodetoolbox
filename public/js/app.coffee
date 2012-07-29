@@ -27,4 +27,5 @@ $(document).ready () ->
     pkg = $(this).data 'package'
     jqXHR = $.ajax(type: 'POST',url: "/packages/#{pkg}/like")
     jqXHR.success (data) -> $('.like_count').text data.count
-    jqXHR.fail (jqxhr, message) -> alert  jqxhr.responseText
+    jqXHR.fail (jqxhr, message) ->
+      $("#signin").dialog( title: jqxhr.responseText)
