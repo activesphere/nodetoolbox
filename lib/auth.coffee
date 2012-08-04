@@ -11,8 +11,8 @@ exports.create = (Conf) ->
       .apiHost('https://api.github.com')
       .appId(Conf.github.appId)
       .appSecret(Conf.github.appSecret)
-      .scope('repo,user,public_repo')
-      .fetchOAuthUser (accessToken)->
+      .scope('repo,public_repo')
+      .fetchOAuthUser (accessToken) ->
         p = this.Promise()
         this.oauth.get this.apiHost() + '/user', accessToken, (err, data) ->
           if (err)
