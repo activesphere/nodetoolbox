@@ -75,7 +75,7 @@ module.exports = PackageController =
 
   updateCategories : (req, res, next) ->
     logger.info "Updating categories on #{req.params.name} with #{req.body.categories}"
-    Package.updateMetadata req.params.name, categories: _compact(_.flatten( [req.body.categories])), (err, document) ->
+    Package.updateMetadata req.params.name, categories: _.compact(_.flatten( [req.body.categories])), (err, document) ->
       if(err)
         logger.error util.inspect(err)
         return res.send "Something bad happened", 422
