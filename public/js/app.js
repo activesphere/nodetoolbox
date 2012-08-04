@@ -37,7 +37,7 @@
       event.preventDefault();
       return $(this).parent().hide();
     });
-    return $('.action a').click(function() {
+    $('.action a').click(function() {
       var jqXHR, self;
       self = $(this);
       jqXHR = $.ajax({
@@ -45,12 +45,15 @@
         url: $(this).attr("href")
       });
       jqXHR.success(function(data) {
-        console.log(self.find('.count'));
-        return self.find('.count').text(data.count);
+        var trigger;
+        trigger = self.find('.count');
+        trigger.text(data.count);
+        trigger.tooltip('show');
+        return setTimeout(function() {
+          return trigger.tooltip('hide');
+        }, 3000);
       });
       jqXHR.fail(function(jqxhr, message) {
-        console.log(message);
-        console.log(jqxhr);
         if (jqxhr.status === 403) {
           return $("#signin").dialog({
             title: jqxhr.responseText
@@ -58,6 +61,10 @@
         }
       });
       return false;
+    });
+    return $('span.count.badge').tooltip({
+      trigger: 'manual',
+      placement: 'bottom'
     });
   });
 

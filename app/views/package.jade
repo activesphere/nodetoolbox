@@ -8,14 +8,14 @@
     span#latest-tag.label(title="latest")= package.latestVersion.version
     #like.action
       a.btn.small.info(href="/packages/#{package.id}/like", rel="tooltip", data-package="#{package.id}") Like &nbsp;&nbsp;
-        span.count.badge.badge-info #{package.attributes.likes}
+        span.count.badge.badge-info(rel='tooltip', title='Liked Successfully') #{package.attributes.likes}
     if package.github
       #forks.action
         a.btn.small.info(href="/packages/#{package.id}/fork") Fork &nbsp;&nbsp;
-          span.count.badge.badge-info #{package.github.forks}
+          span.count.badge.badge-info(rel='tooltip', title='Forked Successfully') #{package.github.forks}
       #watchers.action
         a.btn.small.info(href="/packages/#{package.id}/watch") Watch &nbsp;&nbsp;
-          span.count.badge.badge-info #{package.github.watchers}
+          span.count.badge.badge-info(rel='tooltip', title='Watched Successfully') #{package.github.watchers}
     
     #when-updated
       span.notice.label Last Updated : 

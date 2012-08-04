@@ -13,7 +13,7 @@ Github.getInfo = (item, callback) ->
   logger.info "Getting info from github for #{item.user}/#{item.repo}"
   hub.repos.get item, callback
 
-Github.fork =(pkg, user, callback) ->
+Github.fork = (pkg, user, callback) ->
   hub.authenticate type: 'oauth', token: user.accessToken
   hub.repos.fork user: pkg.owner, repo: pkg.repositoryName, callback
 

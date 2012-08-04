@@ -64,7 +64,12 @@ module.exports = PackageController =
             return res.send "Something bad happened", 422
           res.send  count: count
       else
-        Package[req.params.op] req.params.name, req.session.auth.github.user.login
+        Package[req.params.op] req.params.name, req.session.auth.github.user.login, (err, pkg) ->
+          if(err)
+            logger.error util.inspect(err)
+            # return res.send "Something bad happened", 422
+            return res.send "Something bad happened", 200
+          res.send  200
     else
       res.send "Please log in to Like", 403
 

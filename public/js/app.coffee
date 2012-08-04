@@ -27,9 +27,15 @@ $(document).ready () ->
     self = $(this)
     jqXHR = $.ajax(type: 'POST', url: $(this).attr "href")
     jqXHR.success (data) ->
-      console.log self.find('.count')
-      self.find('.count').text data.count
+      trigger = self.find '.count'  
+      trigger.text data.count
+      trigger.tooltip 'show'
+      setTimeout(() -> 
+        trigger.tooltip 'show'
+      , 3000)
     jqXHR.fail (jqxhr, message) ->
       if(jqxhr.status == 403)
         $("#signin").dialog( title: jqxhr.responseText)
     false
+  
+  $('span.count.badge').tooltip trigger:'manual', placement: 'bottom'
