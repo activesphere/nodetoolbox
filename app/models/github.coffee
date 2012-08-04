@@ -14,12 +14,10 @@ Github.getInfo = (item, callback) ->
   hub.repos.get item, callback
 
 Github.fork = (pkg, user, callback) ->
-  console.log(pkg)
   hub.authenticate type: 'oauth', token: user.accessToken
   hub.repos.fork user: pkg.owner, repo: pkg.repositoryName, callback
 
 Github.watch = (pkg, user, cb) ->
-  console.log(pkg)
   hub.authenticate type: 'oauth', token: user.accessToken
   hub.repos.watch user: pkg.owner, 'repo': pkg.repositoryName, cb
 

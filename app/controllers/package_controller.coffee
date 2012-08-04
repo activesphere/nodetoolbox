@@ -58,13 +58,13 @@ module.exports = PackageController =
     if req.session.auth
       logger.info "#{req.session.auth.github.user.login} #{req.params.op} #{req.params.name}"
       if req.params.op == 'like'
-        Package.like req.params.name, req.session.auth.github.user.login, (err, count) ->
+        Package.like req.params.name, req.session.auth.github.user.id, (err, count) ->
           if(err)
             logger.error util.inspect(err)
             return res.send "Something bad happened", 422
           res.send  count: count
       else
-        Package[req.params.op] req.params.name, req.session.auth.github.user.login, (err, pkg) ->
+        Package[req.params.op] req.params.name, req.session.auth.github.user.id, (err, pkg) ->
           if(err)
             logger.error util.inspect(err)
             # return res.send "Something bad happened", 422 #.... Change it back when github fixes issue
