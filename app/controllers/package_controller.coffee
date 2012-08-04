@@ -67,7 +67,7 @@ module.exports = PackageController =
         Package[req.params.op] req.params.name, req.session.auth.github.user.login, (err, pkg) ->
           if(err)
             logger.error util.inspect(err)
-            # return res.send "Something bad happened", 422
+            # return res.send "Something bad happened", 422 #.... Change it back when github fixes issue
             return res.send "Something bad happened", 200
           res.send  200
     else
@@ -75,7 +75,7 @@ module.exports = PackageController =
 
   updateCategories : (req, res, next) ->
     logger.info "Updating categories on #{req.params.name} with #{req.body.categories}"
-    Package.updateMetadata req.params.name, categories: _.flatten( [req.body.categories]), (err, document) ->
+    Package.updateMetadata req.params.name, categories: _compact(_.flatten( [req.body.categories])), (err, document) ->
       if(err)
         logger.error util.inspect(err)
         return res.send "Something bad happened", 422
