@@ -7,8 +7,9 @@ extensions.createIfNotExisting Conf.userDatabase
 
 module.exports = User = {}
 
-User.findOrCreate = (source, userId, userName, accessToken, accessTokenSecret, promise) ->
-  Conf.userDatabase.view "docs/by_#{source}", key: userId, (err, docs) ->
+User.findOrCreate = (userId, userName, accessToken, accessTokenSecret, promise) ->
+  console.log(userId)
+  Conf.userDatabase.view "docs/by_github", key: userId, (err, docs) ->
     if err
       logger.error "Error using users/_design/docs/_view/by_#{source} #{err.reason}"
       return promise.fail(err)
@@ -17,7 +18,7 @@ User.findOrCreate = (source, userId, userName, accessToken, accessTokenSecret, p
       user = docs[0].value
       promise.fulfill user
     else
-      create source, userId, userName, accessToken, (err, doc)->
+      create userId, userName, accessToken, (err, doc)->
         if err
           logger.error util.inspect(err)
           return promise.fail(err)
@@ -29,10 +30,10 @@ User.findByName = (name, cb) ->
       return cb(err)
     console.log(doc[0])
     cb err, doc[0].value
-create = (source, userId, userName, accessToken,  cb) ->
+create = (userId, userName, accessToken,  cb) ->
   doc =
     accessToken: accessToken
     name: userName
-  doc["#{source}Id"] = userName
+    githubId = userId
   Conf.userDatabase.save doc, cb
   

@@ -21,7 +21,7 @@ exports.create = (Conf) ->
         p
       .findOrCreateUser (session, accessToken, accessTokenSecret, githubUserData) ->
         promise = @Promise()
-        User.findOrCreate 'github', githubUserData.id, githubUserData.login, accessToken, accessTokenSecret, promise
+        User.findOrCreate githubUserData.id, githubUserData.login, accessToken, accessTokenSecret, promise
         promise
       .sendResponse (res, data)->
         this.redirect(res, data.req.headers.referer || "/")
