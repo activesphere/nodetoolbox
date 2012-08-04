@@ -4,7 +4,10 @@ logger = require 'winston'
 util = require 'util'
 extensions.createIfNotExisting Conf.userDatabase
 
-exports.findOrCreate = (source, userId, userName, accessToken, accessTokenSecret, promise) ->
+
+module.exports = User = {}
+
+User.findOrCreate = (source, userId, userName, accessToken, accessTokenSecret, promise) ->
   Conf.userDatabase.view "docs/by_#{source}", key: userId, (err, docs) ->
     if err
       logger.error "Error using users/_design/docs/_view/by_#{source} #{err.reason}"
@@ -20,6 +23,12 @@ exports.findOrCreate = (source, userId, userName, accessToken, accessTokenSecret
           return promise.fail(err)
         promise.fulfill doc
 
+User.findByName = (name, cb) ->
+  Conf.userDatabase.view 'users/by_id', key: name, (err, doc) ->
+    if err
+      return cb(err)
+    console.log(doc[0])
+    cb err, doc[0].value
 create = (source, userId, userName, accessToken,  cb) ->
   doc =
     accessToken: accessToken

@@ -37,21 +37,27 @@
       event.preventDefault();
       return $(this).parent().hide();
     });
-    return $('#like a').click(function() {
-      var jqXHR, pkg;
-      pkg = $(this).data('package');
+    return $('.action a').click(function() {
+      var jqXHR, self;
+      self = $(this);
       jqXHR = $.ajax({
         type: 'POST',
-        url: "/packages/" + pkg + "/like"
+        url: $(this).attr("href")
       });
       jqXHR.success(function(data) {
-        return $('.like_count').text(data.count);
+        console.log(self.find('.count'));
+        return self.find('.count').text(data.count);
       });
-      return jqXHR.fail(function(jqxhr, message) {
-        return $("#signin").dialog({
-          title: jqxhr.responseText
-        });
+      jqXHR.fail(function(jqxhr, message) {
+        console.log(message);
+        console.log(jqxhr);
+        if (jqxhr.status === 403) {
+          return $("#signin").dialog({
+            title: jqxhr.responseText
+          });
+        }
       });
+      return false;
     });
   });
 

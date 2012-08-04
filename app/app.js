@@ -107,7 +107,7 @@
 
   app.get('/search', package_controller.search);
 
-  app.post('/packages/:name/like', package_controller.like);
+  app.post('/packages/:name/:op', package_controller.update);
 
   app.post('/packages/:name', package_controller.updateCategories);
 

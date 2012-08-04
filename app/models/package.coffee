@@ -1,5 +1,7 @@
 _ = require 'underscore'
 Category = require './category'
+Github = require './github'
+User = require './user'
 Conf = require '../../lib/conf'
 logger = require 'winston'
 async = require 'async'
@@ -106,6 +108,16 @@ Package.like = (pkg, user, callback) ->
       return callback err
     Conf.redisClient.scard "#{pkg}:like", (err, val) ->
       callback err, val
+
+Package.fork = (pkg, userName, cb) ->
+  User.findByName userName, (err, user) ->
+    Conf.metadataDatabase.get pkg, (err, pkgMeta) ->
+      Github.fork(owner: pkgMeta.github.owner.login, repositoryName: pkgMeta.github.name, user, cb)
+
+Package.watch = (pkg, userName, cb) ->
+  User.findByName userName, (err, user) ->
+    Conf.metadataDatabase.get pkg, (err, pkgMeta) ->
+      Github.watch( owner: pkgMeta.github.owner.login, repositoryName: pkgMeta.github.name, user, cb)
 
 Package.search = (query, callback) ->
   if query?.trim() isnt ''

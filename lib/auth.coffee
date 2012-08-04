@@ -11,6 +11,7 @@ exports.create = (Conf) ->
       .apiHost('https://api.github.com')
       .appId(Conf.github.appId)
       .appSecret(Conf.github.appSecret)
+      .scope('repo,user,public_repo')
       .fetchOAuthUser (accessToken)->
         p = this.Promise()
         this.oauth.get this.apiHost() + '/user', accessToken, (err, data) ->
@@ -22,5 +23,6 @@ exports.create = (Conf) ->
         promise = @Promise()
         User.findOrCreate 'github', githubUserData.id, githubUserData.login, accessToken, accessTokenSecret, promise
         promise
-      .redirectPath('/');
+      .sendResponse (res, data)->
+        this.redirect(res, data.req.headers.referer || "/")
   return auth

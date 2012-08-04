@@ -54,14 +54,17 @@ module.exports = PackageController =
         return next(err)
       res.render 'recently_added', layout: false, results: results, title: "Recently added packages"
 
-  like : (req, res, next) ->
+  update : (req, res, next) ->
     if req.session.auth
-      logger.info "#{req.session.auth.github.user.login} likes #{req.params.name}"
-      Package.like req.params.name, req.session.auth.github.user.login, (err, count) ->
-        if(err)
-          logger.error util.inspect(err)
-          return res.send "Something bad happened", 422
-        res.send  count: count
+      logger.info "#{req.session.auth.github.user.login} #{req.params.op} #{req.params.name}"
+      if req.params.op == 'like'
+        Package.like req.params.name, req.session.auth.github.user.login, (err, count) ->
+          if(err)
+            logger.error util.inspect(err)
+            return res.send "Something bad happened", 422
+          res.send  count: count
+      else
+        Package[req.params.op] req.params.name, req.session.auth.github.user.login
     else
       res.send "Please log in to Like", 403
 

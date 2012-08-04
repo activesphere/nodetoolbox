@@ -6,16 +6,16 @@
       else
         = package.name
     span#latest-tag.label(title="latest")= package.latestVersion.version
-    #like
-      a.btn.small.info(href="#", rel="tooltip", data-package="#{package.id}") Like &nbsp;&nbsp;
-        span.badge.badge-info #{package.attributes.likes}
+    #like.action
+      a.btn.small.info(href="/packages/#{package.id}/like", rel="tooltip", data-package="#{package.id}") Like &nbsp;&nbsp;
+        span.count.badge.badge-info #{package.attributes.likes}
     if package.github
-      #forks
-        a.btn.small.info(href="#") Forks &nbsp;&nbsp;
-          span.badge.badge-info #{package.github.forks}
-      #watchers
-        a.btn.small.info(href="#") Watchers &nbsp;&nbsp;
-          span.badge.badge-info #{package.github.watchers}
+      #forks.action
+        a.btn.small.info(href="/packages/#{package.id}/fork") Fork &nbsp;&nbsp;
+          span.count.badge.badge-info #{package.github.forks}
+      #watchers.action
+        a.btn.small.info(href="/packages/#{package.id}/watch") Watch &nbsp;&nbsp;
+          span.count.badge.badge-info #{package.github.watchers}
     
     #when-updated
       span.notice.label Last Updated : 

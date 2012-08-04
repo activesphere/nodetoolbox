@@ -23,9 +23,13 @@ $(document).ready () ->
     event.preventDefault()
     $(this).parent().hide()
 
-  $('#like a').click () ->
-    pkg = $(this).data 'package'
-    jqXHR = $.ajax(type: 'POST',url: "/packages/#{pkg}/like")
-    jqXHR.success (data) -> $('.like_count').text data.count
+  $('.action a').click () ->
+    self = $(this)
+    jqXHR = $.ajax(type: 'POST', url: $(this).attr "href")
+    jqXHR.success (data) ->
+      console.log self.find('.count')
+      self.find('.count').text data.count
     jqXHR.fail (jqxhr, message) ->
-      $("#signin").dialog( title: jqxhr.responseText)
+      if(jqxhr.status == 403)
+        $("#signin").dialog( title: jqxhr.responseText)
+    false
