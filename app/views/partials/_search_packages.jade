@@ -1,0 +1,12 @@
+.tile
+  table.zebra-striped
+    tr
+      th Name
+      th Description 
+      th Author(s) 
+    each package in packages
+      tr
+        td 
+          a(href='/packages/' + encodeURIComponent(package.id)) #{package.id}
+        td= package.attributes.description
+        td= package.authorName 
