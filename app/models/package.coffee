@@ -91,6 +91,7 @@ Package.recently_added = (count = 10, cb) ->
     cb null, results
 
 Package.find = (name, cb) ->
+  logger.info "Finding #{name}"
   Conf.packageDatabase.get name, (error, pkg) ->
     if error
       return cb error
