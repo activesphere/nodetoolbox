@@ -7,7 +7,6 @@ logger = require 'winston'
 async = require 'async'
 util = require 'util'
 helper = require '../../lib/helper'
-
 Package = (attr = {}) ->
   this.attributes = attr
   this.github = attr.github
@@ -120,22 +119,18 @@ Package.watch = (pkg, userGithubId, cb) ->
       Github.watch( owner: pkgMeta.github.owner.login, repositoryName: pkgMeta.github.name, user, cb)
 
 Package.search = (query, callback) ->
-  if query?.trim() isnt ''
-    query = query.trim()
-    Conf.packageDatabase.view "search/all", key: query, include_docs: false, (err, result) ->
-      docs = _.uniq result, false, (item) -> item['id']
-      docs = _.map docs, (doc) -> id: doc.id, doc: {id: doc.id, description: doc.value?.description, author: doc.value?.author}
-      async.sortBy(docs, (doc, cb) ->
-        Conf.metadataDatabase.get doc.id, (err, doc) ->
-          if doc?.github
-            cb err, -(doc.github.watchers + doc.github.forks)
-          else
-            cb(null, 0)
-      , (err, results) ->
+  if query && query.trim() == ''
+    callback null, {key: query, result: []}
+  query = query.trim()
+  Conf.elasticSearch.search( 'registry', 'registry', {query: {query_string: {'fields': ['_id', 'description'], query: query}}})
+    .on( 'data', (data) ->
+      matches = _.map(JSON.parse( data).hits.hits, (item) -> item._id)
+      async.map matches, Package.find, (err, res) ->
         if err
-          callback err
-        callback null, {key:query, result: results}
-        )
+          console.log(err)
+        callback null, _.sortBy( res, (pkg) -> pkg?.rank || 0))
+    .on( 'error', () -> callback err)
+    .exec()
 
 Package.gitPackages = (cb) ->
   Conf.packageDatabase.view 'repositories/git', include_docs: false, cb
