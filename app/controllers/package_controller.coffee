@@ -88,4 +88,4 @@ module.exports = PackageController =
       if(err)
         logger.error util.inspect(err)
         return next(err)
-      res.render 'search_result', response: matches, title: "Search - #{req.query.q}"
+      res.render 'search_result', response: matches, key: req.query.q, title: "Search - #{req.query.q}"
