@@ -129,7 +129,7 @@ Package.search = (query, callback) ->
       async.map matches, Package.find, (err, res) ->
         if err
           logger.error err
-        callback null, _.sortBy( res, (pkg) -> pkg?.rank || 0))
+        callback null, _.sortBy( res, (pkg) -> -pkg?.rank || 0))
     .on( 'error', () -> callback err)
     .exec()
 
