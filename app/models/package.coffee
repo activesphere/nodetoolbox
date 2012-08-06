@@ -125,7 +125,6 @@ Package.search = (query, callback) ->
   query = query.trim()
   Conf.elasticSearch.search( 'registry', 'registry', {size: 100, sort: { _score: { } }, query: {query_string: {fields: ['_id^5', 'keywords^2', 'description'], query: "#{query}"}}})
     .on( 'data', (data) ->
-      console.log(JSON.parse(data))
       matches = _.map(JSON.parse(data).hits.hits, (item) -> item._id)
       async.map matches, Package.find, (err, res) ->
         if err
