@@ -30,7 +30,7 @@ $(document).ready () ->
       trigger.text data.count
       trigger.tooltip 'show'
       setTimeout(() -> 
-        trigger.tooltip 'show'
+        trigger.tooltip 'hide'
       , 3000)
     jqXHR.fail (jqxhr, message) ->
       if(jqxhr.status == 403)

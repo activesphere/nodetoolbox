@@ -46,7 +46,7 @@
         trigger.text(data.count);
         trigger.tooltip('show');
         return setTimeout(function() {
-          return trigger.tooltip('show');
+          return trigger.tooltip('hide');
         }, 3000);
       });
       jqXHR.fail(function(jqxhr, message) {
