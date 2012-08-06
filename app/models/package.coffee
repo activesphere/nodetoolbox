@@ -123,9 +123,10 @@ Package.search = (query, callback) ->
   if query && query.trim() == ''
     callback null, {key: query, result: []}
   query = query.trim()
-  Conf.elasticSearch.search( 'registry', 'registry', {query: {query_string: {'fields': ['_id^3', 'description'], query: "#{query}*"}}})
+  Conf.elasticSearch.search( 'registry', 'registry', {query: {query_string: {fields: ['_id^5', 'description'], query: "#{query}"}}})
     .on( 'data', (data) ->
-      matches = _.map(JSON.parse( data).hits.hits, (item) -> item._id)
+      console.log(JSON.parse(data))
+      matches = _.map(JSON.parse(data).hits.hits, (item) -> item._id)
       async.map matches, Package.find, (err, res) ->
         if err
           logger.error err
