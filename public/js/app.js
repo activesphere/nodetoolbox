@@ -16,21 +16,17 @@
     });
     $('span.timeago').timeago();
     if ($("#top_dependent_packages").length !== 0) {
-      $("#top_dependent_packages").ready(function() {
-        return $.get('/top_dependent_packages', function(data) {
-          return $("#top_dependent_packages").html(data);
-        });
+      $.get('/top_dependent_packages', function(data) {
+        return $("#top_dependent_packages").html(data);
       });
     }
     if ($("#recently_added").length !== 0) {
-      $("#recently_added").ready(function() {
-        return $.get('/recently_added', function(data) {
-          var recently_added_element;
-          recently_added_element = $("#recently_added");
-          recently_added_element.html(data);
-          recently_added_element.find('.timeago').timeago();
-          return recently_added_element;
-        });
+      $.get('/recently_added', function(data) {
+        var recently_added_element;
+        recently_added_element = $("#recently_added");
+        recently_added_element.html(data);
+        recently_added_element.find('.timeago').timeago();
+        return recently_added_element;
       });
     }
     $(".content").delegate(".close", 'click', function(event) {
@@ -50,7 +46,7 @@
         trigger.text(data.count);
         trigger.tooltip('show');
         return setTimeout(function() {
-          return trigger.tooltip('hide');
+          return trigger.tooltip('show');
         }, 3000);
       });
       jqXHR.fail(function(jqxhr, message) {
