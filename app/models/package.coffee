@@ -123,7 +123,7 @@ Package.search = (query, callback) ->
   if query && query.trim() == ''
     callback null, {key: query, result: []}
   query = query.trim()
-  Conf.elasticSearch.search( 'registry', 'registry', {query: {query_string: {fields: ['_id^5', 'keywords^2', 'description'], query: "#{query}"}}})
+  Conf.elasticSearch.search( 'registry', 'registry', {size: 100, sort: { _score: { } }, query: {query_string: {fields: ['_id^5', 'keywords^2', 'description'], query: "#{query}"}}})
     .on( 'data', (data) ->
       console.log(JSON.parse(data))
       matches = _.map(JSON.parse(data).hits.hits, (item) -> item._id)

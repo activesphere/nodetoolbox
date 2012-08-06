@@ -10,8 +10,8 @@ curl -XPUT 'localhost:9200/_river/registry/_meta' -d '{
         "host" : "localhost",
         "port" : 5984,
         "db" : "registry",
-        "user": "*******",
-        "password": "*******",
+        "user": "activesphere",
+        "password": "***********",
         "ignore_attachments":true,
         "filter" : null
     },

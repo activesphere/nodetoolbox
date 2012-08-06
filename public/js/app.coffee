@@ -6,6 +6,7 @@ $(document).ready () ->
       true
     false
   $('span.timeago').timeago()
+  
   unless $("#top_dependent_packages").length is 0
     $.get '/top_dependent_packages', (data) ->
       $("#top_dependent_packages").html(data)
