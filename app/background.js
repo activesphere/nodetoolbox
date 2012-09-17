@@ -14,11 +14,13 @@ var Sync = {
 module.exports.start = function(){
   new cron.CronJob( '0 0 0/3 * * *', function(){
     logger.info( "Running github sync Cron now");
+    logger.info( new Date().toString());
     Sync.github();
   }).start();
 
   new cron.CronJob('5 5 5 * * *', function(){
     logger.info( "Running Import job Cron now");
+    logger.info( new Date().toString());
     Sync.npm();
   }).start();
 }
