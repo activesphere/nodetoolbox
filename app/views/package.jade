@@ -6,16 +6,20 @@
       else
         = package.name
     span#latest-tag.label(title="latest")= package.latestVersion.version
+
     #like.action
       a.btn.small.info(href="/packages/#{package.id}/like", rel="tooltip", data-package="#{package.id}") Like &nbsp;&nbsp;
-        span.count.badge.badge-info(rel='tooltip', title='Liked Successfully') #{package.attributes.likes}
+        count.badge.badge-info(rel='tooltip', title='Liked Successfully') #{package.attributes.likes}
+    #downloads.action
+        a.btn.small.info(href="#", rel="tooltip", data-package="#{package.id}") Downloads &nbsp;&nbsp;
+          count.badge.badge-info(rel='tooltip', title='Downloaded Successfully') #{package.attributes.downloads}
     if package.github
       #forks.action
         a.btn.small.info(href="/packages/#{package.id}/fork") Fork &nbsp;&nbsp;
-          span.count.badge.badge-info(rel='tooltip', title='Forked Successfully') #{package.github.forks}
+          count.badge.badge-info(rel='tooltip', title='Forked Successfully') #{package.github.forks}
       #watchers.action
         a.btn.small.info(href="/packages/#{package.id}/watch") Watch &nbsp;&nbsp;
-          span.count.badge.badge-info(rel='tooltip', title='Watched Successfully') #{package.github.watchers}
+          count.badge.badge-info(rel='tooltip', title='Watched Successfully') #{package.github.watchers}
     
     #when-updated
       span.notice.label Last Updated : 

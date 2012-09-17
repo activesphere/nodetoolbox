@@ -227,7 +227,7 @@ footer {
 #when-updated span.label.timeago {
   border-radius: 0px 3px 3px 0px;  
 }
-#like, #forks, #watchers {
+#like, #forks, #watchers, #downloads {
   display: inline;
   margin : 0px 40px 0px 40px;
 }
