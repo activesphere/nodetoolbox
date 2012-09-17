@@ -13,6 +13,7 @@ Conf.couchdb =
   host: process.env.npm_package_config__couchdb_host
   registry_database: process.env.npm_package_config__couchdb_registry_database
   metadata_database: process.env.npm_package_config__couchdb_metadata_database
+  downloads_database: process.env.npm_package_config_couchdb_downloads_database
   username: process.env.npm_package_config__couchdb_username
   password: process.env.npm_package_config__couchdb_password
   npm_registry: 
@@ -40,6 +41,7 @@ Conf.packageDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf
 Conf.metadataDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.metadata_database)
 Conf.userDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database("users")
 Conf.npmDb = new cradle.Connection(Conf.couchdb.npm_registry.host, Conf.couchdb.npm_registry.port).database(Conf.couchdb.npm_registry.database)
+Conf.downloadsDatabase = new cradle.Connection(Conf.couchdb.npm_registry.host, Conf.couchdb.npm_registry.port).database(Conf.couchdb.downloads_database)
 
 Conf.redisClient =  redis.createClient Conf.redis.port, Conf.redis.host
 Conf.redisClient.auth Conf.redis.auth

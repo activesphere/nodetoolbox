@@ -28,7 +28,10 @@ Object.defineProperty Package.prototype, "maintainers",  get: () -> this.latestV
 Object.defineProperty Package.prototype, "categories",  get: () -> this.attributes.categories || []
 Object.defineProperty Package.prototype, "dependencies",  get: () -> this.latestVersion?.dependencies || []
 Object.defineProperty Package.prototype, "devDependencies",  get: () -> this.latestVersion?.devDependencies || []
+
 Object.defineProperty Package.prototype, "rank",  get: () -> if this.attributes.github then (this.attributes.github.forks + this.attributes.github.watchers) else 0
+
+Object.defineProperty Package.prototype, "downloads",  get: () -> this.downloads || 0
 Object.defineProperty Package.prototype, "codeCommand",  get: () ->
   "git clone #{this.attributes.repository.url}"   if this.attributes.repository?.type == 'git' and this.attributes.repository?.url
 
@@ -92,15 +95,22 @@ Package.recently_added = (count = 10, cb) ->
 
 Package.find = (name, cb) ->
   logger.info "Finding #{name}"
-  Conf.packageDatabase.get name, (error, pkg) ->
-    if error
-      return cb error
-    Conf.metadataDatabase.get name, (err, doc) ->
-      if !err
-        _.extend pkg, doc
-      Conf.redisClient.scard "#{name}:like", (err, reply) ->
-        _.extend pkg, likes: reply || 0
-        cb null, new Package(pkg)
+  packageInfo = (done) ->
+    Conf.packageDatabase.get name, (err, pkg) -> done(err, pkg)
+  packageMetadata = (done) ->
+    Conf.metadataDatabase.get name, (err, doc) -> done(err, doc)
+  packageLikes = (done) ->
+    Conf.redisClient.scard "#{name}:like", (err, reply) -> done(err, likes: reply || 0)
+  packageDownloads = (done) ->
+    Conf.downloadsDatabase.view "app/pkg", {startkey: [name], endkey:["#{name}\ufff0"], reduce: true, group_level: 1}, (err, res) ->
+      done(null, downloads: res[0].value)
+
+  async.parallel [packageInfo, packageMetadata, packageLikes, packageDownloads], (err, results) ->
+    if(err)
+      return cb err
+    pkg = {}
+    _.each results, (item) -> _.extend(pkg, item)
+    return cb null, new Package(pkg)
 
 Package.like = (pkg, user, callback) ->
   Conf.redisClient.sadd "#{pkg}:like", user, (err, val) ->
