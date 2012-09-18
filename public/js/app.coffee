@@ -3,6 +3,11 @@ $(document).ready () ->
   $('.chosen-categories').chosen().change () ->
     form = $(this).parent()
     $.post form.attr('action'), form.serialize(), ()->
+      trigger = $('.category')
+      trigger.tooltip 'show'
+      setTimeout(()-> 
+        trigger.tooltip 'hide'
+      , 3000)
       true
     false
   $('span.timeago').timeago()
@@ -29,7 +34,7 @@ $(document).ready () ->
       trigger = self.find '.count'  
       trigger.text data.count
       trigger.tooltip 'show'
-      setTimeout(() -> 
+      setTimeout(() ->
         trigger.tooltip 'hide'
       , 3000)
     jqXHR.fail (jqxhr, message) ->
@@ -37,4 +42,4 @@ $(document).ready () ->
         $("#signin").dialog( title: jqxhr.responseText)
     false
   
-  $('span.count.badge').tooltip trigger:'manual', placement: 'bottom'
+  $('span.count.badge, .category').tooltip trigger:'manual', placement: 'bottom'
