@@ -10,7 +10,6 @@ helper = require '../../lib/helper'
 Package = (attr = {}) ->
   this.attributes = attr
   this.github = attr.github
-  console.log this.attributes._id
   this
 
 
