@@ -102,17 +102,21 @@ Package.find = (name, cb) ->
   packageLikes = (done) ->
     Conf.redisClient.scard "#{name}:like", (err, reply) -> done(err, likes: reply || 0)
   packageDownloads = (done) ->
-    Conf.downloadsDatabase.view "app/pkg", {startkey: [name], endkey:["#{name}\ufff0"], reduce: true, group_level: 1}, (err, res) ->
-      if(err)
-        console.log(err)
-        return done(null, downloads: 0)
-      done(null, downloads: res[0].value)
+    done(null, downloads: 0)
+    # Conf.downloadsDatabase.view "app/pkg", {startkey: [name], endkey:["#{name}\ufff0"], reduce: true, group_level: 1}, (err, res) ->
+    #   if(err)
+    #     console.log(err)
+    #     return done(null, downloads: 0)
+    #   done(null, downloads: res[0].value)
 
-  async.parallel [packageInfo, packageMetadata, packageLikes], (err, results) ->
+  async.parallel [packageInfo, packageMetadata, packageLikes, packageDownloads], (err, results) ->
     if(err)
       return cb err
     pkg = {}
-    _.each results, (item) -> _.extend(pkg, item)
+    _.each results, (item) ->
+      console.log(item)
+      _.extend(pkg, item)
+    
     return cb null, new Package(pkg)
 
 Package.like = (pkg, user, callback) ->
