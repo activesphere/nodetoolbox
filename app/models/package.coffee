@@ -144,8 +144,8 @@ Package.search = (query, callback) ->
       matches = _.map(JSON.parse(data).hits.hits, (item) -> item._id)
       async.map matches, Package.find, (err, res) ->
         if err
-          logger.error err
-        callback null, _.sortBy( res, (pkg) -> -pkg?.rank || 0))
+          logger.error util.inspect(err)
+        callback null, _.sortBy( _.compact(res), (pkg) -> -pkg?.rank || 0))
     .on( 'error', () -> callback err)
     .exec()
 
