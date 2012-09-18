@@ -10,6 +10,7 @@ helper = require '../../lib/helper'
 Package = (attr = {}) ->
   this.attributes = attr
   this.github = attr.github
+  console.log this.attributes._id
   this
 
 
@@ -114,9 +115,7 @@ Package.find = (name, cb) ->
       return cb err
     pkg = {}
     _.each results, (item) ->
-      console.log(item)
       _.extend(pkg, item)
-    
     return cb null, new Package(pkg)
 
 Package.like = (pkg, user, callback) ->
