@@ -12,7 +12,6 @@
       $.post(form.attr('action'), form.serialize(), function() {
         var trigger;
         trigger = $('.category');
-        console.log(trigger);
         trigger.tooltip('show');
         setTimeout(function() {
           return trigger.tooltip('hide');
@@ -65,9 +64,12 @@
       });
       return false;
     });
-    return $('span.count.badge, .category').tooltip({
+    $('span.count.badge, .category').tooltip({
       trigger: 'manual',
       placement: 'bottom'
+    });
+    return $('.count').prettynumber({
+      delimiter: ','
     });
   });
 
