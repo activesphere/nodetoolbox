@@ -108,7 +108,7 @@ Package.find = (name, cb) ->
         return done(null, downloads: 0)
       done(null, downloads: res[0].value)
 
-  async.parallel [packageInfo, packageMetadata, packageLikes, packageDownloads], (err, results) ->
+  async.parallel [packageInfo, packageMetadata, packageLikes], (err, results) ->
     if(err)
       return cb err
     pkg = {}
