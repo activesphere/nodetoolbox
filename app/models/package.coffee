@@ -144,7 +144,7 @@ Package.search = (query, callback) ->
         if err
           logger.error util.inspect(err)
         callback null, _.sortBy( _.compact(res), (pkg) -> -pkg?.rank || 0))
-    .on( 'error', () -> callback err)
+    .on( 'error', (err) -> callback err)
     .exec()
 
 Package.gitPackages = (cb) ->
