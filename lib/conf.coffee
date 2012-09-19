@@ -41,7 +41,7 @@ Conf.packageDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf
 Conf.metadataDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.metadata_database)
 Conf.userDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database("users")
 Conf.npmDb = new cradle.Connection(Conf.couchdb.npm_registry.host, Conf.couchdb.npm_registry.port).database(Conf.couchdb.npm_registry.database)
-Conf.downloadsDatabase = new cradle.Connection(Conf.couchdb.npm_registry.host, Conf.couchdb.npm_registry.port).database(Conf.couchdb.downloads_database)
+Conf.downloadsDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Conf.couchdb.auth).database(Conf.couchdb.downloads_database)
 
 Conf.redisClient =  redis.createClient Conf.redis.port, Conf.redis.host
 Conf.redisClient.auth Conf.redis.auth
