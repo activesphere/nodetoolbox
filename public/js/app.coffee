@@ -41,7 +41,6 @@ $(document).ready () ->
       if(jqxhr.status == 403)
         $("#signin").dialog( title: jqxhr.responseText)
     false
-  
-  $('span.count.badge, .category').tooltip trigger:'manual', placement: 'bottom'
 
+  $('span.count.badge, .category').tooltip trigger:'manual', placement: 'bottom'
   $('.count').prettynumber( delimiter:',')

@@ -54,6 +54,14 @@ module.exports = PackageController =
         return next(err)
       res.render 'recently_added', layout: false, results: results, title: "Recently added packages"
 
+  top_by_downloads: (req, res, next) ->
+    logger.info "Invoking Top Downloads"
+    Package.top_downloads 10, (err, results) ->
+      if err
+        logger.error util.inspect(err)
+        return next(err)
+      res.render 'recently_added', layout: false, results: results, title: "Recently added packages"
+
   update : (req, res, next) ->
     if req.session.auth
       logger.info "#{req.session.auth.github.user.login} #{req.params.op} #{req.params.name}"

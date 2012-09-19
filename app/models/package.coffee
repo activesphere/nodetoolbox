@@ -87,6 +87,13 @@ Package.top_by_dependencies = (count= 10, cb) ->
     results = results?.sort (a, b) -> b.value - a.value
     cb null, _.first(results, count)
 
+Package.top_downloads = (count= 10, cb) ->
+  Conf.downloadsDatabase.view 'app/pkg', {reduce: true, group_level: 2, limit: count, descending:true}, (err, results) ->
+    if(err)
+      return cb(err)
+    console.log results
+    cb null, _.first(results, count)
+
 Package.recently_added = (count = 10, cb) ->
   Conf.packageDatabase.view 'recent/created', {descending: true, limit: count}, (err, results) ->
     if(err)
