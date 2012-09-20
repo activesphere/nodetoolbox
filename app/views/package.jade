@@ -25,23 +25,23 @@
       span.notice.label Last Updated : 
       span.label.notice.timeago(title="#{package.lastUpdatedOn}") #{package.lastUpdatedOn}
 
-  div.container
-    blockquote.row= package.attributes.description
+  div.container-fluid
+    blockquote.row-fluid= package.attributes.description
 
       |   --  
       a(href="#readme") Read More
     if package.installCommand
-      .alert.alert-info.row
-        h4
+      .row-fluid
+        h4.alert.alert-info
           | INSTALL » #{package.installCommand}
     if package.codeCommand
-      .alert.alert-info.row
-        h4
+      .row-fluid
+        h4.alert.alert-info
           | CODE » #{package.codeCommand}
 
     if package.github
-      .alert.alert-info.row
-        h4
+      .row-fluid
+        h4.alert.alert-info
           | GITHUB » 
           a(href="#{package.github.html_url}") #{package.github.html_url}
 
@@ -99,4 +99,4 @@
     if(package.github)
       hr
       a(name="readme")
-      .readme_js(data-owner="#{package.owner}", data-repo="#{package.repositoryName}")
+      .readme_js.row-fluid(data-owner="#{package.owner}", data-repo="#{package.repositoryName}")
