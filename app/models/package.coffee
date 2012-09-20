@@ -88,7 +88,7 @@ Package.top_by_dependencies = (count= 10, cb) ->
     cb null, _.first(results, count)
 
 Package.top_downloads = (count= 10, cb) ->
-  Conf.redisClient.zrevrangebyscore "downloads:totals", '+inf', "0", "withscores",'limit', 0, count, (err, res) ->
+  Conf.redisClient.zrevrangebyscore "downloads:today", '+inf', "0", "withscores",'limit', 0, count, (err, res) ->
     formattedData = []
     keys = (x for x in res by 2)
     values = (x for x in res[1..-1] by 2)
