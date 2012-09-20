@@ -1,7 +1,5 @@
-h3 Recently Added
+h3 By Freshness
 dl
   each result in results
     dt
-      a(href="/packages/#{result.id}") #{result.id}
-      - added_at = new Date(result.key).toISOString()
-      sup.timeago(title=added_at)= added_at
+      a(href="/packages/#{result.id}", title="#{timeago(new Date(result.key))}") #{result.id}

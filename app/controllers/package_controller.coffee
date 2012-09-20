@@ -44,7 +44,7 @@ module.exports = PackageController =
       if err
         logger.error util.inspect(err)
         return next(err)
-      res.render 'top_by', layout: false, results: results, title: "Popular Dependencies"
+      res.render 'top_by', layout: false, results: results, title: "By Dependencies"
 
   recently_added: (req, res, next) ->
     logger.info "Invoking Recently Added"
@@ -60,7 +60,7 @@ module.exports = PackageController =
       if err
         logger.error util.inspect(err)
         return next(err)
-      res.render 'top_by', layout: false, results: results, title: "Popular Downloads"
+      res.render 'top_by', layout: false, results: results, title: "By Downloads"
 
   update : (req, res, next) ->
     if req.session.auth

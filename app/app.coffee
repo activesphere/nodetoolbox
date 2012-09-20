@@ -21,6 +21,7 @@ helpers =
     req.session.auth.github.user
   flash: (req) ->
     req.flash()
+  timeago: require 'timeago'
   production: () ->
     process.env.NODE_ENV == 'production'
 

@@ -25,7 +25,6 @@ $(document).ready () ->
     $.get '/recently_added', (data) ->
       recently_added_element = $("#recently_added")
       recently_added_element.html(data)
-      recently_added_element.find('.timeago').timeago()
       return recently_added_element
 
   $(".content").delegate  ".close", 'click', (event) ->

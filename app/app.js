@@ -38,6 +38,7 @@
     flash: function(req) {
       return req.flash();
     },
+    timeago: require('timeago'),
     production: function() {
       return process.env.NODE_ENV === 'production';
     }
