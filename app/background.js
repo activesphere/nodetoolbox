@@ -10,9 +10,10 @@ var _ = require('underscore');
 var Sync = {
   github: require('../lib/github_sync').github,
   npm   : require('../lib/npm_sync').npm,
-  downloads   : require('../lib/npm_sync').downloads
+  downloads   : require('../lib/downloads_sync').downloads
 };
 module.exports.start = function(){
+  logger.info("Setting up the cron jobs");
   new cron.CronJob( '0 0 0/3 * * *', function(){
     logger.info( "Running github sync Cron now");
     logger.info( new Date().toString());
@@ -30,4 +31,6 @@ module.exports.start = function(){
     logger.info( new Date().toString());
     Sync.downloads();
   }).start();
+  logger.info("Done.");
+  
 }
