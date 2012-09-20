@@ -26,7 +26,6 @@
         return $("#top_dependent_packages").html(data);
       });
     }
-    console.log("Top downloads"+ $("#top_downloads").length)
     if ($("#top_downloads").length !== 0) {
       $.get('/top_downloads', function(data) {
         $("#top_downloads").html(data);
