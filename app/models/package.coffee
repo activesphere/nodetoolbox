@@ -87,6 +87,14 @@ Package.top_by_dependencies = (count= 10, cb) ->
     results = results?.sort (a, b) -> b.value - a.value
     cb null, _.first(results, count)
 
+Package.top_downloads = (count= 10, cb) ->
+  Conf.redisClient.zrevrangebyscore "downloads:totals", '+inf', "0", "withscores",'limit', 0, count, (err, res) ->
+    formattedData = []
+    keys = (x for x in res by 2)
+    values = (x for x in res[1..-1] by 2)
+    formattedData.push key: key, value: values[i] for key, i in keys
+    cb null, formattedData
+
 Package.recently_added = (count = 10, cb) ->
   Conf.packageDatabase.view 'recent/created', {descending: true, limit: count}, (err, results) ->
     if(err)
@@ -102,11 +110,10 @@ Package.find = (name, cb) ->
   packageLikes = (done) ->
     Conf.redisClient.scard "#{name}:like", (err, reply) -> done(err, likes: reply || 0)
   packageDownloads = (done) ->
-    Conf.downloadsDatabase.view "app/pkg", {startkey: [name], endkey:["#{name}\ufff0"], reduce: true, group_level: 1}, (err, res) ->
+    Conf.redisClient.zscore "downloads:totals", name, (err, res) ->
       if(err)
-        logger.error util.inspect err
         return done(null, downloads: 0)
-      done(null, downloads: res[0]?.value || 0)
+      done(null, downloads: res || 0)
 
   async.parallel [packageInfo, packageMetadata, packageLikes, packageDownloads], (err, results) ->
     if(err)
