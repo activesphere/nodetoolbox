@@ -115,6 +115,8 @@
 
   app.get('/recently_added', package_controller.recently_added);
 
+  app.get('/top_downloads', package_controller.top_by_downloads);
+
   port = process.env.PORT || 4000;
 
   app.listen(port, function() {

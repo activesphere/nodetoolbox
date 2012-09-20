@@ -1,12 +1,13 @@
 #top_ranked.well
-    #popular_packages.span5
-      h3 Popular by github
+    #popular_packages.span4
+      h3 Popular on Github
       dl
         each package in top_ranked_packages
           dt
             a(href='/packages/#{encodeURIComponent(package.id)}') #{package.id}
-    #top_dependent_packages.span5
-    #recently_added.span5
+    #top_dependent_packages.span4
+    #top_downloads.span4
+    #recently_added.span4
 
 #categories.row
   each packages_info, category_name in categories

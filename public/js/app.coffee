@@ -16,6 +16,11 @@ $(document).ready () ->
     $.get '/top_dependent_packages', (data) ->
       $("#top_dependent_packages").html(data)
 
+  unless $("#top_downloads").length is 0
+    $.get '/top_downloads', (data) ->
+      $("#top_downloads").html(data)
+      $('.count').prettynumber( delimiter:',')
+
   unless $("#recently_added").length is 0
     $.get '/recently_added', (data) ->
       recently_added_element = $("#recently_added")

@@ -26,6 +26,14 @@
         return $("#top_dependent_packages").html(data);
       });
     }
+    if ($("#top_downloads").length !== 0) {
+      $.get('/top_downloads', function(data) {
+        $("#top_downloads").html(data);
+        return $('.count').prettynumber({
+          delimiter: ','
+        });
+      });
+    }
     if ($("#recently_added").length !== 0) {
       $.get('/recently_added', function(data) {
         var recently_added_element;
