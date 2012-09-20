@@ -70,10 +70,10 @@
             li
               a(href="mailto:"+package.authorEmail) #{package.authorName}
       .span4
-        h5 Contributers
+        h5 Contributors
           ul.unstyled
-            each contributer in package.contributers
-              li= contributer.name
+            each contributor in package.contributors
+              li= contributor.name
 
       .span4
         h5 Maintainers

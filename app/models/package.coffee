@@ -23,7 +23,7 @@ Object.defineProperty Package.prototype, "latestVersion",  get: () -> this.attri
 Object.defineProperty Package.prototype, "lastUpdatedOn",  get: () -> if this.github then new Date(this.github?.pushed_at).toISOString() else "Unknown"
 Object.defineProperty Package.prototype, "homepage",  get: () -> this.latestVersion?.homepage || this.attributes.author?.url
 Object.defineProperty Package.prototype, "engines",  get: () -> this.latestVersion?.engines || []
-Object.defineProperty Package.prototype, "contributers",  get: () -> this.latestVersion?.contributers || []
+Object.defineProperty Package.prototype, "contributors",  get: () -> this.latestVersion?.contributors || []
 Object.defineProperty Package.prototype, "maintainers",  get: () -> this.latestVersion?.maintainers || []
 Object.defineProperty Package.prototype, "categories",  get: () -> this.attributes.categories || []
 Object.defineProperty Package.prototype, "dependencies",  get: () -> this.latestVersion?.dependencies || []
