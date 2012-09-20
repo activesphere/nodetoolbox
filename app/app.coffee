@@ -83,6 +83,7 @@ port = process.env.PORT || 4000
 app.listen port, () ->
   logger.info "Node Version is #{process.version}"
   logger.info "app started at port #{port}"
+  logger.info "The time now is " + new Date().toString()
 
 if Conf.isBackground()
   logger.info "This is a background box. starting the background processes."

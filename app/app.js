@@ -122,7 +122,8 @@
 
   app.listen(port, function() {
     logger.info("Node Version is " + process.version);
-    return logger.info("app started at port " + port);
+    logger.info("app started at port " + port);
+    return logger.info("The time now is " + new Date().toString());
   });
 
   if (Conf.isBackground()) {
