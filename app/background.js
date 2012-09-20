@@ -9,8 +9,8 @@ var _ = require('underscore');
 
 var Sync = {
   github: require('../lib/github_sync').github,
-  npm   : require('../lib/npm_sync').npm
-  downloads   : require('../lib/npm_sync').npm
+  npm   : require('../lib/npm_sync').npm,
+  downloads   : require('../lib/npm_sync').downloads
 };
 module.exports.start = function(){
   new cron.CronJob( '0 0 0/3 * * *', function(){
