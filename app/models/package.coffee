@@ -31,8 +31,8 @@ Object.defineProperty Package.prototype, "devDependencies",  get: () -> this.lat
 
 Object.defineProperty Package.prototype, "rank",  get: () -> if this.attributes.github then (this.attributes.github.forks + this.attributes.github.watchers) else 0
 
-Object.defineProperty Package.prototype, "downloads",  get: () -> this.downloads || 0
-Object.defineProperty Package.prototype, "likes",  get: () -> this.likes || 0
+Object.defineProperty Package.prototype, "downloads",  get: () -> this.total_downloads || 0
+Object.defineProperty Package.prototype, "likes",  get: () -> this.total_likes || 0
 Object.defineProperty Package.prototype, "codeCommand",  get: () ->
   "git clone #{this.attributes.repository.url}"   if this.attributes.repository?.type == 'git' and this.attributes.repository?.url
 
@@ -109,12 +109,12 @@ Package.find = (name, cb) ->
   packageMetadata = (done) ->
     Conf.metadataDatabase.get name, (err, doc) -> done(err, doc)
   packageLikes = (done) ->
-    Conf.redisClient.scard "#{name}:like", (err, reply) -> done(err, likes: reply || 0)
+    Conf.redisClient.scard "#{name}:like", (err, reply) -> done(err, total_likes: reply || 0)
   packageDownloads = (done) ->
     Conf.redisClient.zscore "downloads:totals", name, (err, res) ->
       if(err)
-        return done(null, downloads: 0)
-      done(null, downloads: res || 0)
+        return done(err)
+      done(null, total_downloads: res || 0)
 
   async.parallel [packageInfo, packageMetadata, packageLikes, packageDownloads], (err, results) ->
     if(err)
