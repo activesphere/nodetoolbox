@@ -14,8 +14,9 @@ Conf.couchdb =
   registry_database: process.env.npm_package_config__couchdb_registry_database
   metadata_database: process.env.npm_package_config__couchdb_metadata_database
   downloads_database: process.env.npm_package_config_couchdb_downloads_database
-  username: process.env.npm_package_config__couchdb_username
-  password: process.env.npm_package_config__couchdb_password
+  auth:
+    username: process.env.npm_package_config__couchdb_username
+    password: process.env.npm_package_config__couchdb_password
   npm_registry: 
     host : "isaacs.iriscouch.com"
     port : 5984
@@ -33,7 +34,6 @@ Conf.redis =
 Conf.elasticsearchServers =
   host: process.env.npm_package_config_elastic_server || "localhost"
   port: process.env.npm_package_config_elastic_server_port || 9200
-
   
 Conf.elasticSearch = new ElasticSearchClient Conf.elasticsearchServers
 
@@ -45,6 +45,5 @@ Conf.downloadsDatabase = new cradle.Connection(Conf.couchdb.host, 5984, auth: Co
 
 Conf.redisClient =  redis.createClient Conf.redis.port, Conf.redis.host
 Conf.redisClient.auth Conf.redis.auth
-
 Conf.isBackground = () ->
   process.env.npm_package_config_run_background_tasks is 'true' || false

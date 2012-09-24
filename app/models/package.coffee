@@ -14,13 +14,13 @@ Package = (attr = {}) ->
 
 
 Object.defineProperty Package.prototype, "id", get: () -> this.attributes._id
-Object.defineProperty Package.prototype, "owner", {get: () -> this.github?.owner?.login || this.attributes.github.owner}
+Object.defineProperty Package.prototype, "owner", {get: () -> this.github?.owner?.login || this.attributes.github?.owner}
 Object.defineProperty Package.prototype, "authorName", get: () -> this.attributes.author?.name or "Unknown"
 Object.defineProperty Package.prototype, "authorEmail", get: () -> this.attributes.author?.email or ""
 Object.defineProperty Package.prototype, "name",  get: () -> this.attributes.name or this.attributes["_id"]
 Object.defineProperty Package.prototype, "repositoryName", { get: () -> this.github?.name}
 Object.defineProperty Package.prototype, "latestVersion",  get: () -> this.attributes.versions[this.attributes['dist-tags']?.latest]
-Object.defineProperty Package.prototype, "lastUpdatedOn",  get: () -> if this.github then new Date(this.github?.pushed_at).toISOString() else "Unknown"
+Object.defineProperty Package.prototype, "lastUpdatedOn",  get: () -> if this.github?.pushed_at then new Date(this.github?.pushed_at).toISOString() else "Unknown"
 Object.defineProperty Package.prototype, "homepage",  get: () -> this.latestVersion?.homepage || this.attributes.author?.url
 Object.defineProperty Package.prototype, "engines",  get: () -> this.latestVersion?.engines || []
 Object.defineProperty Package.prototype, "contributors",  get: () -> this.latestVersion?.contributors || []
@@ -32,6 +32,7 @@ Object.defineProperty Package.prototype, "devDependencies",  get: () -> this.lat
 Object.defineProperty Package.prototype, "rank",  get: () -> if this.attributes.github then (this.attributes.github.forks + this.attributes.github.watchers) else 0
 
 Object.defineProperty Package.prototype, "downloads",  get: () -> this.downloads || 0
+Object.defineProperty Package.prototype, "likes",  get: () -> this.likes || 0
 Object.defineProperty Package.prototype, "codeCommand",  get: () ->
   "git clone #{this.attributes.repository.url}"   if this.attributes.repository?.type == 'git' and this.attributes.repository?.url
 
