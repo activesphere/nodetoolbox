@@ -9,7 +9,7 @@
 
     #like.action
       a.btn.small.info(href="/packages/#{package.id}/like", rel="tooltip", data-package="#{package.id}") Like &nbsp;&nbsp;
-        .count.badge.badge-info(rel='tooltip', title='Liked Successfully') #{package.attributes.likes}
+        .count.badge.badge-info(rel='tooltip', title='Liked Successfully') #{package.likes}
     #downloads.action
         a.btn.small.info(href="#", rel="tooltip", data-package="#{package.id}") Downloads &nbsp;&nbsp;
           .count.badge.badge-info(rel='tooltip', title='Total downloads till date for the npm package') #{package.attributes.downloads}

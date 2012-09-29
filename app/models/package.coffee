@@ -7,20 +7,21 @@ logger = require 'winston'
 async = require 'async'
 util = require 'util'
 helper = require '../../lib/helper'
+
+
 Package = (attr = {}) ->
   this.attributes = attr
   this.github = attr.github
   this
 
-
 Object.defineProperty Package.prototype, "id", get: () -> this.attributes._id
-Object.defineProperty Package.prototype, "owner", {get: () -> this.github?.owner?.login || this.attributes.github.owner}
+Object.defineProperty Package.prototype, "owner", {get: () -> this.github?.owner?.login || this.attributes.github?.owner}
 Object.defineProperty Package.prototype, "authorName", get: () -> this.attributes.author?.name or "Unknown"
 Object.defineProperty Package.prototype, "authorEmail", get: () -> this.attributes.author?.email or ""
 Object.defineProperty Package.prototype, "name",  get: () -> this.attributes.name or this.attributes["_id"]
 Object.defineProperty Package.prototype, "repositoryName", { get: () -> this.github?.name}
 Object.defineProperty Package.prototype, "latestVersion",  get: () -> this.attributes.versions[this.attributes['dist-tags']?.latest]
-Object.defineProperty Package.prototype, "lastUpdatedOn",  get: () -> if this.github then new Date(this.github?.pushed_at).toISOString() else "Unknown"
+Object.defineProperty Package.prototype, "lastUpdatedOn",  get: () -> if this.github?.pushed_at then new Date(this.github?.pushed_at).toISOString() else "Unknown"
 Object.defineProperty Package.prototype, "homepage",  get: () -> this.latestVersion?.homepage || this.attributes.author?.url
 Object.defineProperty Package.prototype, "engines",  get: () -> this.latestVersion?.engines || []
 Object.defineProperty Package.prototype, "contributors",  get: () -> this.latestVersion?.contributors || []
@@ -31,7 +32,8 @@ Object.defineProperty Package.prototype, "devDependencies",  get: () -> this.lat
 
 Object.defineProperty Package.prototype, "rank",  get: () -> if this.attributes.github then (this.attributes.github.forks + this.attributes.github.watchers) else 0
 
-Object.defineProperty Package.prototype, "downloads",  get: () -> this.downloads || 0
+Object.defineProperty Package.prototype, "downloads",  get: () -> this.total_downloads || 0
+Object.defineProperty Package.prototype, "likes",  get: () -> this.total_likes || 0
 Object.defineProperty Package.prototype, "codeCommand",  get: () ->
   "git clone #{this.attributes.repository.url}"   if this.attributes.repository?.type == 'git' and this.attributes.repository?.url
 
@@ -41,6 +43,11 @@ Object.defineProperty Package.prototype, "installCommand",  get: () ->
   else
     "npm install #{this.attributes['_id']}"
 
+Package.prototype.index = () ->
+   mod = _.pick this,  ["id", "name", "description", "readme", "owner", "categories", "author", "repository", "github", "downloads"]
+   Conf.elasticSearch.index("npm", "package", mod)
+   .on('data', (stuff) -> console.log stuff)
+   .on('error', (weep) -> console.log "Error").exec()
 
 Package.watch_updates = () ->
   logger.info "Watching Updates from Couchdb"
@@ -108,19 +115,18 @@ Package.find = (name, cb) ->
   packageMetadata = (done) ->
     Conf.metadataDatabase.get name, (err, doc) -> done(err, doc)
   packageLikes = (done) ->
-    Conf.redisClient.scard "#{name}:like", (err, reply) -> done(err, likes: reply || 0)
+    Conf.redisClient.scard "#{name}:like", (err, reply) -> done(err, total_likes: reply || 0)
   packageDownloads = (done) ->
     Conf.redisClient.zscore "downloads:totals", name, (err, res) ->
       if(err)
-        return done(null, downloads: 0)
-      done(null, downloads: res || 0)
+        return done(err)
+      done(null, total_downloads: res || 0)
 
   async.parallel [packageInfo, packageMetadata, packageLikes, packageDownloads], (err, results) ->
     if(err)
       return cb err
     pkg = {}
-    _.each results, (item) ->
-      _.extend(pkg, item)
+    _.each results, (item) -> _.extend(pkg, item)
     return cb null, new Package(pkg)
 
 Package.like = (pkg, user, callback) ->
@@ -143,14 +149,13 @@ Package.watch = (pkg, userGithubId, cb) ->
 Package.search = (query, callback) ->
   if query && query.trim() == ''
     callback null, {key: query, result: []}
-  query = query.trim()
-  Conf.elasticSearch.search( 'registry', 'registry', {size: 100, sort: { _score: { } }, query: {query_string: {fields: ['name^5','_id^3', 'keywords^2', 'description'], query: "#{query}"}}})
+  Conf.elasticSearch.search( 'npm', 'package', Conf.searchQuery(query.trim()))
     .on( 'data', (data) ->
       matches = _.map(JSON.parse(data).hits.hits, (item) -> item._id)
       async.map matches, Package.find, (err, res) ->
         if err
           logger.error util.inspect(err)
-        callback null, _.sortBy( _.compact(res), (pkg) -> -pkg?.rank || 0))
+        callback null, res )
     .on( 'error', (err) -> callback err)
     .exec()
 

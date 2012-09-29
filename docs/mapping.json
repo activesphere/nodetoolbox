@@ -1,0 +1,70 @@
+curl -XPUT 'http://localhost:9200/npm/package/_mapping' -d '
+{
+    "package" : {
+        "_all" : {"enabled" : true},
+        "properties" : {
+            "name" : {"type" : "string", "store" : "yes", "boost": 5},
+            "description" : {"type" : "string", "store" : "yes", "boost": 2},
+            "readme" : {"type" : "string", "store" : "yes"},
+            "owner" : {"type" : "string", "store" : "yes"},
+            "categories" : {"type" : "string", "store" : "yes", "boost": 2},
+            "author": {
+              "properties":{
+                "name": {"type" : "string", "store" : "yes"},
+                "email": {"type" : "string", "store" : "yes"}
+               }
+            },
+            "repository": {
+              "properties":{
+                "type": {"type" : "string", "store" : "yes"},
+                "url": {"type" : "string", "store" : "yes"}
+               }
+            },
+            "total_downloads": {"type" : "integer", "store" : "yes"},
+            "github": {
+              "properties":{
+                "forks_count": {"type" : "integer", "store" : "yes"},
+                "watchers_count": {"type" : "integer", "store" : "yes"},
+                "updated_at": {"type" : "date", "format" : "dateOptionalTime", "ignore_malformed":true},
+                "created_at": {"type" : "date", "format" : "dateOptionalTime", "ignore_malformed":true},
+                "name": {"type" : "string", "store" : "yes"},
+                "homepage": {"type" : "string", "store" : "yes"},
+                "language": {"type" : "string", "store" : "yes"},
+                "owner":{
+                  "properties":{
+                    "avatar_url": {"type" : "string", "store" : "yes"},
+                    "url": {"type" : "string", "store" : "yes"},
+                    "gravatar_id": {"type" : "string", "store" : "yes"},
+                    "id": {"type" : "integer", "store" : "yes"},
+                    "login": {"type" : "string", "store" : "yes"}
+                  }
+                }
+               }
+            }
+        }
+    }
+}
+'
+
+
+curl -XPOST 'http://localhost:9200/npm/package/' -d '{
+    "package" : {
+      "name": "redis-proxy",
+      "description": "proxy for redis servers",
+      "readme": "Redis-proxy\n=============\n\nIts like haproxy except for redis. \n\n\nWhy RedisProxy?\n\nTypically for every redis server we setup we have a backup server setup a....",
+      "author": { "name": "Sreekanth", "email": "gabbar@activesphere.com" },
+      "repository": { "type": "git", "url": "git@github.com:sreeix/redis-proxy.git" },
+      "categories": [ "Proxy", "Redis" ]
+    }
+}'
+
+curl -XPOST 'http://localhost:9200/npm/package/' -d '{
+    "package" : {
+      "name": "redis",
+      "description": "redis client for node",
+      "readme": "Redis client for node",
+      "author": { "name": "Matt Ranney", "email": "mjr@ranney.com" },
+      "repository": { "type": "git", "url": "git://github.com/mranney/node_redis.git" },
+      "categories": [ "Redis" ]
+    }
+}'
