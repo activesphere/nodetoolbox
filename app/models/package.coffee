@@ -7,11 +7,12 @@ logger = require 'winston'
 async = require 'async'
 util = require 'util'
 helper = require '../../lib/helper'
+
+
 Package = (attr = {}) ->
   this.attributes = attr
   this.github = attr.github
   this
-
 
 Object.defineProperty Package.prototype, "id", get: () -> this.attributes._id
 Object.defineProperty Package.prototype, "owner", {get: () -> this.github?.owner?.login || this.attributes.github?.owner}
@@ -42,6 +43,11 @@ Object.defineProperty Package.prototype, "installCommand",  get: () ->
   else
     "npm install #{this.attributes['_id']}"
 
+Package.prototype.index = () ->
+   mod = _.pick this,  ["id", "name", "description", "readme", "owner", "categories", "author", "repository", "github", "downloads"]
+   Conf.elasticSearch.index("npm", "package", mod)
+   .on('data', (stuff) -> console.log stuff)
+   .on('error', (weep) -> console.log "Error").exec()
 
 Package.watch_updates = () ->
   logger.info "Watching Updates from Couchdb"
@@ -120,8 +126,7 @@ Package.find = (name, cb) ->
     if(err)
       return cb err
     pkg = {}
-    _.each results, (item) ->
-      _.extend(pkg, item)
+    _.each results, (item) -> _.extend(pkg, item)
     return cb null, new Package(pkg)
 
 Package.like = (pkg, user, callback) ->
@@ -144,14 +149,13 @@ Package.watch = (pkg, userGithubId, cb) ->
 Package.search = (query, callback) ->
   if query && query.trim() == ''
     callback null, {key: query, result: []}
-  query = query.trim()
-  Conf.elasticSearch.search( 'registry', 'registry', {size: 100, sort: { _score: { } }, query: {query_string: {fields: ['name^5','_id^3', 'keywords^2', 'description'], query: "#{query}"}}})
+  Conf.elasticSearch.search( 'npm', 'package', Conf.searchQuery(query.trim()))
     .on( 'data', (data) ->
       matches = _.map(JSON.parse(data).hits.hits, (item) -> item._id)
       async.map matches, Package.find, (err, res) ->
         if err
           logger.error util.inspect(err)
-        callback null, _.sortBy( _.compact(res), (pkg) -> -pkg?.rank || 0))
+        callback null, res )
     .on( 'error', (err) -> callback err)
     .exec()
 

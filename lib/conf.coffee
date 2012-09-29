@@ -47,3 +47,10 @@ Conf.redisClient =  redis.createClient Conf.redis.port, Conf.redis.host
 Conf.redisClient.auth Conf.redis.auth
 Conf.isBackground = () ->
   process.env.npm_package_config_run_background_tasks is 'true' || false
+
+Conf.searchQuery = (query) ->
+  return {
+    size: 100,
+    sort: [{ "downloads" : {"missing" : 0, "order": "desc"} }, {"github": {"ignore_unmapped" : true}}, "_score"],
+    query: {query_string: {fields: ['name^5','_id^3', 'keywords^2', 'description'], query: query}}
+  }
