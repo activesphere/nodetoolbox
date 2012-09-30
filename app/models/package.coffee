@@ -103,7 +103,7 @@ Package.top_downloads = (count= 10, cb) ->
     cb null, formattedData
 
 Package.recently_added = (count = 10, cb) ->
-  Conf.packageDatabase.view 'recent/created', {descending: true, limit: count}, (err, results) ->
+  Conf.packageDatabase.view 'ui/recent', {descending: true, limit: count}, (err, results) ->
     if(err)
       return cb err
     cb null, results
