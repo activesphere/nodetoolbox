@@ -32,7 +32,7 @@ Object.defineProperty Package.prototype, "devDependencies",  get: () -> this.lat
 
 Object.defineProperty Package.prototype, "rank",  get: () -> if this.attributes.github then (this.attributes.github.forks + this.attributes.github.watchers) else 0
 
-Object.defineProperty Package.prototype, "downloads",  get: () -> this.total_downloads || 0
+Object.defineProperty Package.prototype, "downloads",  get: () -> this.attributes.total_downloads || 0
 Object.defineProperty Package.prototype, "likes",  get: () -> this.total_likes || 0
 Object.defineProperty Package.prototype, "codeCommand",  get: () ->
   "git clone #{this.attributes.repository.url}"   if this.attributes.repository?.type == 'git' and this.attributes.repository?.url
