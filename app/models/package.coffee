@@ -43,11 +43,11 @@ Object.defineProperty Package.prototype, "installCommand",  get: () ->
   else
     "npm install #{this.attributes['_id']}"
 
-Package.prototype.index = () ->
+Package.prototype.index = (cb) ->
    mod = _.pick this,  ["id", "name", "description", "readme", "owner", "categories", "author", "repository", "github", "downloads"]
    Conf.elasticSearch.index("npm", "package", mod)
-   .on('data', (stuff) -> console.log stuff)
-   .on('error', (weep) -> console.log "Error").exec()
+   .on('data', (stuff) -> return cb(null, stuff))
+   .on('error', (weep) -> return cb(weep)).exec()
 
 Package.watch_updates = () ->
   logger.info "Watching Updates from Couchdb"
