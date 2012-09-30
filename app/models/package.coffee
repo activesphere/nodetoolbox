@@ -160,7 +160,7 @@ Package.search = (query, callback) ->
     .exec()
 
 Package.gitPackages = (cb) ->
-  Conf.packageDatabase.view 'repositories/git', include_docs: false, cb
+  Conf.packageDatabase.view 'ui/git', include_docs: false, cb
 
 Package.updateMetadata = (pkg, info, cb) ->
   cb = cb || helper.print
