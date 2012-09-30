@@ -45,6 +45,8 @@ Object.defineProperty Package.prototype, "installCommand",  get: () ->
 
 Package.prototype.index = () ->
    mod = _.pick this,  ["id", "name", "description", "readme", "owner", "categories", "author", "repository", "github", "downloads"]
+   console.log("saving...");
+   console.log(mod);
    Conf.elasticSearch.index("npm", "package", mod)
    .on('data', (stuff) -> console.log stuff)
    .on('error', (weep) -> console.log "Error").exec()
