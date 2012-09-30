@@ -81,7 +81,7 @@ Package.by_rank = (number_of_items = 10, cb) ->
 
 Package.all = (filter = '', cb) ->
   filter ||= 'a'  
-  Conf.packageDatabase.view 'package/by_name', startkey: "#{filter}aaaa", endkey: "#{filter}zzzz", include_docs: false, (err, docs) ->
+  Conf.packageDatabase.view 'ui/by_name', startkey: "#{filter}aaaa", endkey: "#{filter}zzzz", include_docs: false, (err, docs) ->
     if err
       return cb  err
     documents = _.map docs, (doc) ->  id: doc.id, doc: {id: doc.id, description: doc.value?.description, author: doc.value?.author}  
