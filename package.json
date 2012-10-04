@@ -23,6 +23,7 @@
     "timeago"          : "0.1.0",
     "elasticsearchclient"          : "0.2.2",
     "cron"            : "0.3.4",
+    "hat.js"            : "0.0.1",
     "redis"           : "0.7.2"
   },
   "devDependencies": {
@@ -32,6 +33,7 @@
     "npm-sync": "node script/npm_sync.js",
     "download-sync": "node script/downloads_sync.js",
     "search-sync": "node script/elasticsearch_sync.js",
+    "deploy": "hat.js -s staging deploy",
     "console": "node"
   }
 }
