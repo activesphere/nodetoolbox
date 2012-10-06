@@ -1,11 +1,14 @@
 module.exports = staging =   {
-  hosts : [{host: "192.168.2.44", user: "v", location:"~/apps/nodetoolbox"}],
+  hosts : [{host: "192.168.0.105", user: "v", location:"~/apps/nodetoolbox"}],
   repository: "git://github.com/sreeix/nodetoolbox2.git",
   branch: "master",
-  pre_deploy: function setupfolders (options) {
+  deploymentType: "npm",
+  predeploy: function setupfolders (done) {
     console.log("pre deploy");
+    done("predeploy");
   },
-  post_deploy: function cleanup (options) {
+  postdeploy: function cleanup (done) {
     console.log("Post deploy")
+    done("postdeploy");
   }
 };
