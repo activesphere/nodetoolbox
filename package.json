@@ -28,7 +28,8 @@
   },
   "devDependencies": {
   }, "scripts": {
-    "start": "node app/app.js",
+    "start": "PIDFILE=tmp/pids/toolbox.pid node app/app.js",
+    "stop": "kill -QUIT `cat tmp/pids/toolbox.pid`",
     "github-sync": "node script/github_sync.js",
     "npm-sync": "node script/npm_sync.js",
     "download-sync": "node script/downloads_sync.js",
