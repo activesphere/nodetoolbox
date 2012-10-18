@@ -1,6 +1,5 @@
 module.exports = staging =   {
-  hosts : [{host: "192.168.0.105", user: "v", location:"~/apps/nodetoolbox"},
-            {host: "192.168.0.106", user: "v", location:"~/apps/nodetoolbox"}],
+  hosts : [{host: "192.168.0.105", user: "v", location:"~/apps/nodetoolbox"}],
   repository: { type: "git", url: "git://github.com/sreeix/nodetoolbox2.git", branch: "master"},
   deploymentType: "npm",
   predeploy: function setupfolders (done) {

@@ -23,7 +23,7 @@
     "timeago"          : "0.1.0",
     "elasticsearchclient"          : "0.2.2",
     "cron"            : "0.3.4",
-    "hat.js"            : "0.0.4",
+    "hat.js"            : "0.0.7",
     "redis"           : "0.7.2"
   },
   "devDependencies": {
