@@ -8,7 +8,6 @@ module.exports = production =   {
     done();
   },
   post_deploy: function cleanup (done) {
-    console.log("Post deploy");
-    done();
+    return this.cleanup(done);
   }
 };
