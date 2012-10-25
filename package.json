@@ -23,12 +23,12 @@
     "timeago"          : "0.1.0",
     "elasticsearchclient"          : "0.2.2",
     "cron"            : "0.3.4",
-    "hat.js"            : "0.0.9",
+    "hat.js"            : "0.0.10",
     "redis"           : "0.7.2"
   },
   "devDependencies": {
   }, "scripts": {
-    "start": "PIDFILE=tmp/pids/toolbox.pid nohup node app/app.js &",
+    "start": "PIDFILE=tmp/pids/toolbox.pid node app/app.js",
     "stop": "kill -QUIT `cat tmp/pids/toolbox.pid`;true",
     "github-sync": "node script/github_sync.js",
     "npm-sync": "node script/npm_sync.js",
