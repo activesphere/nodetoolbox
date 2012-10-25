@@ -2,6 +2,7 @@ require 'coffee-script'
 express   = require 'express'
 util      = require 'util'
 logger    = require 'winston'
+fs        = require 'fs'
 
 Conf      = require '../lib/conf'
 everyauth = require('../lib/auth').create(Conf)
@@ -80,6 +81,11 @@ app.get '/recently_added', package_controller.recently_added
 app.get '/top_downloads', package_controller.top_by_downloads
 
 port = process.env.PORT || 4000
+if process.env.PIDFILE
+  fs.writeFile process.env.PIDFILE, process.pid, (err) ->
+    if (err)
+      throw err
+
 app.listen port, () ->
   logger.info "Node Version is #{process.version}"
   logger.info "app started at port #{port}"
