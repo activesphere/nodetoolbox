@@ -130,6 +130,14 @@
     });
   }
 
+  console.log("----------------------------------------------");
+
+  console.log(process.env.NODE_ENV);
+
+  console.log(process.env.npm_config_production);
+
+  console.log("----------------------------------------------");
+
   app.listen(port, function() {
     logger.info("Node Version is " + process.version);
     logger.info("app started at port " + port);
