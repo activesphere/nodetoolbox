@@ -29,7 +29,7 @@
   "devDependencies": {
   }, "scripts": {
     "start": "NODE_ENV=production PIDFILE=tmp/pids/toolbox.pid node app/app.js",
-    "stop": "kill -QUIT `cat tmp/pids/toolbox.pid`;true",
+    "stop": "kill -9 `cat tmp/pids/toolbox.pid`;true",
     "github-sync": "node script/github_sync.js",
     "npm-sync": "node script/npm_sync.js",
     "download-sync": "node script/downloads_sync.js",
