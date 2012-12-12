@@ -25,6 +25,7 @@ Conf.couchdb =
 Conf.github =
   appId: process.env.npm_package_config__github_appId
   appSecret: process.env.npm_package_config__github_appSecret
+  appToken: process.env.npm_package_config__github_appToken
 
 Conf.redis =
   host: process.env.npm_package_config__redis_host

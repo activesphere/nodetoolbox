@@ -3,6 +3,8 @@ logger  = require 'winston'
 _       = require 'underscore'
 async   = require 'async'
 GithubApi = require 'github'
+Conf = require '../../lib/conf'
+
 hub = new GithubApi( version: "3.0.0")
 Github = {}
 
@@ -11,7 +13,8 @@ Github.info = (urls, cb) ->
 
 Github.getInfo = (item, callback) ->
   logger.info "Getting info from github for #{item.user}/#{item.repo}"
-  hub.repos.get item, callback
+  hub.authenticate  type: 'oauth', token: Conf.github.auth_token
+  hub.repos.get item,  callback
 
 Github.fork = (pkg, user, callback) ->
   hub.authenticate type: 'oauth', token: user.accessToken
