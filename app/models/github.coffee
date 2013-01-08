@@ -16,6 +16,11 @@ Github.getInfo = (item, callback) ->
   hub.authenticate  type: 'oauth', token: Conf.github.appToken
   hub.repos.get item,  callback
 
+Github.getUserInfo = (item, callback) ->
+  logger.info "Getting info from github for #{item.user}"
+  hub.authenticate  type: 'oauth', token: Conf.github.appToken
+  hub.user.getFrom item,  callback
+
 Github.fork = (pkg, user, callback) ->
   hub.authenticate type: 'oauth', token: user.accessToken
   hub.repos.fork user: pkg.owner, repo: pkg.repositoryName, callback
