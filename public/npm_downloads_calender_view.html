@@ -32,7 +32,9 @@ body {
 
 </style>
 <body>
-<script src="javascripts/d3.js"></script>
+  <h1>Packages Downloaded everyday from npm.</h1>
+  <h5>Hover over each day for the count</h5>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
 var width = 960,
@@ -45,7 +47,7 @@ var day = d3.time.format("%w"),
     format = d3.time.format("%Y-%m-%d");
 
 var color = d3.scale.quantize()
-    .domain([0, 777243])
+    .domain([1000, 500000])
     .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
 
 var svg = d3.select("body").selectAll("svg")
@@ -84,7 +86,7 @@ svg.selectAll(".month")
 d3.csv("packages_downloads_by_date.csv", function(error, csv) {
   var data = d3.nest()
     .key(function(d) { return d.Date; })
-    .rollup(function(d) { console.log( d[0].Value); return parseInt(d[0].Value, 10); })
+    .rollup(function(d) { return parseInt(d[0].Value, 10); })
     .map(csv);
 
   rect.filter(function(d) { return d in data; })
