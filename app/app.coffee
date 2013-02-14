@@ -10,6 +10,7 @@ helper    = require '../lib/helper'
 
 package_controller = require './controllers/package_controller'
 category_controller = require './controllers/category_controller'
+visualization_controller = require './controllers/visualization_controller'
 packages = require './models/package'
 RedisStore = require('connect-redis')(express)
 app = express.createServer()
@@ -79,6 +80,7 @@ app.post '/packages/:name', package_controller.updateCategories
 app.get '/top_dependent_packages', package_controller.top_by_dependencies
 app.get '/recently_added', package_controller.recently_added
 app.get '/top_downloads', package_controller.top_by_downloads
+app.get '/viz/:name', visualization_controller.show
 
 port = process.env.PORT || 4000
 if process.env.PIDFILE
