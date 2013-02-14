@@ -151,7 +151,7 @@ Package.search = (query, callback) ->
     callback null, {key: query, result: []}
   Conf.elasticSearch.search( 'npm', 'package', Conf.searchQuery(query.trim()))
     .on( 'data', (data) ->
-      matches = _.map(JSON.parse(data).hits.hits, (item) -> item._id)
+      matches = _.map(JSON.parse(data).hits?.hits, (item) -> item._id)
       async.map matches, Package.find, (err, res) ->
         if err
           logger.error util.inspect(err)
