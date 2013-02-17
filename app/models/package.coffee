@@ -117,13 +117,11 @@ Package.find = (name, cb) ->
   packageLikes = (done) ->
     Conf.redisClient.scard "#{name}:like", (err, reply) -> done(err, total_likes: reply || 0)
   packageDownloads = (done) ->
-    Conf.redisClient.zscore "downloads:totals", name, (err, res) ->
-      if(err)
-        return done(err)
-      done(null, total_downloads: res || 0)
+    Conf.redisClient.zscore "downloads:totals", name, (err, res) -> done(err, total_downloads: res || 0)
 
   async.parallel [packageInfo, packageMetadata, packageLikes, packageDownloads], (err, results) ->
     if(err)
+      logger.error util.inspect(err)
       return cb err
     pkg = {}
     _.each results, (item) -> _.extend(pkg, item)
@@ -153,9 +151,7 @@ Package.search = (query, callback) ->
     .on( 'data', (data) ->
       matches = _.map(JSON.parse(data).hits?.hits, (item) -> item._id)
       async.map matches, Package.find, (err, res) ->
-        if err
-          logger.error util.inspect(err)
-        callback null, res )
+        callback null, _.select(res, (item) -> item? ) )
     .on( 'error', (err) -> callback err)
     .exec()
 
