@@ -254,3 +254,13 @@ footer {
 .tile .package-section.repo {
     height: 90px;
 }
+
+
+.name {
+   padding: 10px;
+   margin-top: 10px;
+   text-align: center;
+}
+.name a img {
+   padding-top: 7px;
+}
