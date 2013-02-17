@@ -1,11 +1,15 @@
 #index
   h3 Visualizations
   ul
-    li.name 
+    li.name
       a(href='/viz/by_created') How many packages are created per day?
-    li.name 
+        img(src='/images/by_created_thumbnail.png')
+    li.name
       a(href='/viz/by_downloads') How many packages are downloaded per day?
-    li.name 
-      a(href='http://gabbar.cartodb.com/tables/package_locations/embed_map?title=true&description=true&search=true&shareable=true') Where are these packages being published from?
-    li.name 
+         img(src='/images/by_downloads_thumbnail.png')
+    li.name
+      a(href='http://gabbar.cartodb.com/tables/package_locations/embed_map?title=true&description=true&search=true&shareable=true')  Where are these packages being published from?
+        img(src='/images/locations_thumbnail.png')
+    li.name
       a(href='/deps/node_deps.svg') Where are these packages being published from? (Very big/slow SVG version)
+        img(src='/images/node_deps_thumbnail.png')
