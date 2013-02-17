@@ -122,6 +122,8 @@
 
   app.get('/top_downloads', package_controller.top_by_downloads);
 
+  app.get('/viz/', visualization_controller.index);
+
   app.get('/viz/:name', visualization_controller.show);
 
   port = process.env.PORT || 4000;
