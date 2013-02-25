@@ -35,6 +35,7 @@
     "download-sync": "node script/downloads_sync.js",
     "search-sync": "node script/elasticsearch_sync.js",
     "deploy": "hat.js -s production deploy",
+    "deploy-staging": "hat.js -s staging deploy",
     "console": "node"
   }
 }

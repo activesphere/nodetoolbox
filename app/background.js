@@ -14,7 +14,7 @@ var Sync = {
 };
 module.exports.start = function(){
   logger.info("Setting up the cron jobs");
-  new cron.CronJob( '0 0 0/3 * * *', function(){
+  new cron.CronJob( '0 0 7 * * *', function(){
     logger.info( "Running github sync Cron now");
     logger.info( new Date().toString());
     Sync.github();
@@ -26,7 +26,7 @@ module.exports.start = function(){
     Sync.npm();
   }).start();
 
-  new cron.CronJob('5 5 5,9,15,19,23 * * *', function(){
+  new cron.CronJob('5 5 4 * * *', function(){
     logger.info( "Running Download job from Couchdb");
     logger.info( new Date().toString());
     Sync.downloads();
