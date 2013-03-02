@@ -2,5 +2,5 @@ node_modules/*
 control.log
 npm-debug.log
 *.rdb
-
+output.html
 tmp/*
