@@ -55,8 +55,6 @@ app.configure ->
 
   app.use everyauth.middleware()
 
-  everyauth.helpExpress(app)
-
 app.configure 'development', () ->
   app.use express.errorHandler(showStack: true, dumpExceptions: true)
 
@@ -66,6 +64,11 @@ app.configure 'production', () ->
       res.render '404', title: '', params: req.params, layout: false
     else
       next(err)
+
+app.dynamicHelpers(
+  user: (req, res) ->
+    req?.session?.auth?.github?.user
+)
 
 app.get '/', package_controller.home
 app.get '/packages', package_controller.index
