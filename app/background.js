@@ -20,17 +20,17 @@ module.exports.start = function(){
     Sync.github();
   }).start();
 
-  new cron.CronJob('5 5 5 * * *', function(){
-    logger.info( "Running Import job Cron now");
-    logger.info( new Date().toString());
-    Sync.npm();
-  }).start();
-
-  new cron.CronJob('5 5 4 * * *', function(){
-    logger.info( "Running Download job from Couchdb");
-    logger.info( new Date().toString());
-    Sync.downloads();
-  }).start();
+  // new cron.CronJob('5 5 5 * * *', function(){
+  //   logger.info( "Running Import job Cron now");
+  //   logger.info( new Date().toString());
+  //   Sync.npm();
+  // }).start();
+  // 
+  // new cron.CronJob('5 5 4 * * *', function(){
+  //   logger.info( "Running Download job from Couchdb");
+  //   logger.info( new Date().toString());
+  //   Sync.downloads();
+  // }).start();
   logger.info("Done.");
   
 }
