@@ -6,6 +6,7 @@ body {
 }
 body .container-fluid .content {
   min-height: 580px;
+   max-width: 947px;
 }
 .well {
   background: rgb(237, 237, 237);
