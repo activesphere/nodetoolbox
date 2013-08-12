@@ -15,7 +15,7 @@ var Sync = {
 
 module.exports.start = function(){
   logger.info("Setting up the cron jobs");
-  new cron.CronJob( '0 0 7 * * *', function(){
+  new cron.CronJob( '0 0 7 * * 6', function(){
     logger.info( "Running github sync Cron now");
     logger.info( new Date().toString());
     Sync.github({throttleTime: 10000, parallel: 5});
