@@ -80,25 +80,15 @@ Package.by_rank = (number_of_items = 10, cb) ->
     cb null, docs
 
 Package.all = (filter = '', cb) ->
-<<<<<<< HEAD
-  filter ||= 'a'  
-  Conf.packageDatabase.view 'ui/by_name', startkey: "#{filter}aaaa", endkey: "#{filter}zzzz", stale: 'update_after', include_docs: false, (err, docs) ->
-=======
   filter ||= 'a'
-  Conf.packageDatabase.view 'ui/by_name', startkey: "#{filter}aaaa", endkey: "#{filter}zzzz", include_docs: false, (err, docs) ->
->>>>>>> 0efa1a3e999d97135036bc36989c126432579d0c
+  Conf.packageDatabase.view 'ui/by_name', startkey: "#{filter}aaaa", endkey: "#{filter}zzzz", stale: 'update_after',include_docs: false, (err, docs) ->
     if err
       return cb  err
     documents = _.map docs, (doc) ->  id: doc.id, doc: {id: doc.id, description: doc.value?.description, author: doc.value?.author}
     cb null,  key: filter, docs: documents
 
-<<<<<<< HEAD
-Package.top_by_dependencies = (count= 10, cb) ->
-  Conf.packageDatabase.view 'ui/dependencies', {reduce: true, group: true, stale: 'update_after'}, (err, results) ->
-=======
 Package.top_by_dependencies = (count = 10, cb) ->
-  Conf.packageDatabase.view 'ui/dependencies', {reduce: true, group: true}, (err, results) ->
->>>>>>> 0efa1a3e999d97135036bc36989c126432579d0c
+  Conf.packageDatabase.view 'ui/dependencies', {reduce: true, group: true, stale: 'update_after'}, (err, results) ->
     if(err)
       return cb(err)
     results = results?.sort (a, b) -> b.value - a.value
