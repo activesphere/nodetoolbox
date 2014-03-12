@@ -12,12 +12,13 @@ var Sync = {
   npm   : require('../lib/npm_sync').npm,
   downloads   : require('../lib/downloads_sync').downloads
 };
+
 module.exports.start = function(){
   logger.info("Setting up the cron jobs");
-  new cron.CronJob( '0 0 7 * * *', function(){
+  new cron.CronJob( '0 0 7 * * 6', function(){
     logger.info( "Running github sync Cron now");
     logger.info( new Date().toString());
-    Sync.github();
+    Sync.github({throttleTime: 10000, parallel: 5});
   }).start();
 
   // new cron.CronJob('5 5 5 * * *', function(){
@@ -25,12 +26,12 @@ module.exports.start = function(){
   //   logger.info( new Date().toString());
   //   Sync.npm();
   // }).start();
-  // 
+  //
   // new cron.CronJob('5 5 4 * * *', function(){
   //   logger.info( "Running Download job from Couchdb");
   //   logger.info( new Date().toString());
   //   Sync.downloads();
   // }).start();
   logger.info("Done.");
-  
+
 }
