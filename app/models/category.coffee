@@ -3,7 +3,7 @@ _ = require 'underscore'
 
 Category = 
   all: (options, cb) ->
-    criteria = _.extend( reduce:false , options)
+    criteria = _.extend( {reduce: false, stale: 'ok'} , options)
     Conf.metadataDatabase.view 'categories/all', criteria, cb
 
 module.exports = Category

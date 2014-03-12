@@ -74,21 +74,21 @@ Package.by_category = (category_name, top_count = 10, cb) ->
     cb null, results
 
 Package.by_rank = (number_of_items = 10, cb) ->
-  Conf.metadataDatabase.view 'categories/rank', {limit: number_of_items, descending: true}, (err, docs) ->
+  Conf.metadataDatabase.view 'categories/rank', {limit: number_of_items, descending: true, stale: 'update_after'}, (err, docs) ->
     if err
       cb err
     cb null, docs
 
 Package.all = (filter = '', cb) ->
   filter ||= 'a'  
-  Conf.packageDatabase.view 'ui/by_name', startkey: "#{filter}aaaa", endkey: "#{filter}zzzz", include_docs: false, (err, docs) ->
+  Conf.packageDatabase.view 'ui/by_name', startkey: "#{filter}aaaa", endkey: "#{filter}zzzz", stale: 'update_after', include_docs: false, (err, docs) ->
     if err
       return cb  err
     documents = _.map docs, (doc) ->  id: doc.id, doc: {id: doc.id, description: doc.value?.description, author: doc.value?.author}  
     cb null,  key: filter, docs: documents
 
 Package.top_by_dependencies = (count= 10, cb) ->
-  Conf.packageDatabase.view 'ui/dependencies', {reduce: true, group: true}, (err, results) ->
+  Conf.packageDatabase.view 'ui/dependencies', {reduce: true, group: true, stale: 'update_after'}, (err, results) ->
     if(err)
       return cb(err)
     results = results?.sort (a, b) -> b.value - a.value
@@ -103,7 +103,7 @@ Package.top_downloads = (count= 10, cb) ->
     cb null, formattedData
 
 Package.recently_added = (count = 10, cb) ->
-  Conf.packageDatabase.view 'ui/recent', {descending: true, limit: count}, (err, results) ->
+  Conf.packageDatabase.view 'ui/recent', {descending: true, limit: count, stale: 'update_after'}, (err, results) ->
     if(err)
       return cb err
     cb null, results
@@ -156,7 +156,7 @@ Package.search = (query, callback) ->
     .exec()
 
 Package.gitPackages = (cb) ->
-  Conf.packageDatabase.view 'ui/git', include_docs: false, cb
+  Conf.packageDatabase.view 'ui/git', {include_docs: false, stale: 'update_after'}, cb
 
 Package.updateMetadata = (pkg, info, cb) ->
   cb = cb || helper.print
